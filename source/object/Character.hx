@@ -1,7 +1,6 @@
 package object;
 
 import backend.Conductor;
-import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.graphics.frames.FlxAtlasFrames;
 import state.PlayState;
@@ -650,7 +649,7 @@ class Character extends FlxSprite
 		}
 	}
 
-	public function addOffset(name:String, x:Float = 0, y:Float = 0)
+	public function addOffset(name:String = 'bf', x:Float = 0, y:Float = 0)
 	{
 		animOffsets[name] = [x, y];
 	}
