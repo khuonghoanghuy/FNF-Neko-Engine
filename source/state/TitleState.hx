@@ -1,15 +1,18 @@
 package state;
 
+import backend.Conductor;
+import backend.MusicBeat;
 import flixel.FlxG;
 import flixel.FlxSprite;
-import flixel.FlxState;
+import flixel.util.FlxColor;
 import flixel.util.FlxTimer;
 
-class TitleState extends FlxState
+class TitleState extends MusicBeat
 {
 	override public function create()
 	{
 		super.create();
+		FlxG.save.bind('funkinNeko', 'huy1234th');
 
 		new FlxTimer().start(1, function(tmr:FlxTimer)
 		{
@@ -19,13 +22,16 @@ class TitleState extends FlxState
 
 	var logoBl:FlxSprite;
 	var gfDance:FlxSprite;
+	var danceLeft:Bool = false;
 	var titleText:FlxSprite;
 
 	function startIntro():Void
 	{
-		FlxG.sound.playMusic(Paths.music('freakyMenu'), 0);
-
-		FlxG.sound.music.fadeIn(4, 0, 0.7);
+		FlxG.camera.flash(FlxColor.WHITE, 2);
+		FlxG.sound.playMusic(Paths.music('freakyMenu'), 1);
+		// FlxG.sound.music.fadeIn(4, 0, 0.7);
+		Conductor.changeBPM(102);
+		persistentUpdate = true;
 
 		logoBl = new FlxSprite(-150, -100);
 		logoBl.frames = Paths.getSparrowAtlas('logoBumpin');
@@ -54,6 +60,29 @@ class TitleState extends FlxState
 
 	override public function update(elapsed:Float)
 	{
+		if (FlxG.sound.music != null)
+			Conductor.songPosition = FlxG.sound.music.time;
 		super.update(elapsed);
+		if (FlxG.keys.justPressed.ENTER)
+		{
+			FlxG.camera.flash(FlxColor.WHITE, 1);
+			FlxG.sound.play(Paths.sound("confirmMenu"), 0.6);
+			new FlxTimer().start(1, function(timer:FlxTimer)
+			{
+				FlxG.switchState(new MainMenuState());
+			});
+		}
+	}
+
+	override function beatHit()
+	{
+		super.beatHit();
+
+		danceLeft = !danceLeft;
+
+		if (danceLeft)
+			gfDance.animation.play('danceRight');
+		else
+			gfDance.animation.play('danceLeft');
 	}
 }
