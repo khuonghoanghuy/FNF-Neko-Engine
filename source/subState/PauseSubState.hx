@@ -14,7 +14,7 @@ import flixel.text.FlxText;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
-import state.FreeplayMenu.FreeplayState;
+import state.FreeplayState;
 import state.PlayState;
 import state.StoryMenuState;
 

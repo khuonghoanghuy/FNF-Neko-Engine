@@ -33,7 +33,7 @@ import object.Character;
 import object.DialogueBox;
 import object.HealthIcon;
 import object.Note;
-import state.FreeplayMenu.FreeplayState;
+import state.FreeplayState;
 import subState.GameOverSubstate;
 import subState.PauseSubState;
 

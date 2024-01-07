@@ -7,7 +7,7 @@ import flixel.FlxObject;
 import flixel.util.FlxColor;
 import flixel.util.FlxTimer;
 import object.Boyfriend;
-import state.FreeplayMenu.FreeplayState;
+import state.FreeplayState;
 import state.LoadingState;
 import state.PlayState;
 import state.StoryMenuState;

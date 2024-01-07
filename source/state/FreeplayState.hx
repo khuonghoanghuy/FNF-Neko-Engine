@@ -3,6 +3,7 @@ package state;
 import backend.CoolUtil;
 import backend.Highscore;
 import backend.MusicBeat;
+import backend.Song;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.group.FlxGroup.FlxTypedGroup;
@@ -242,10 +243,6 @@ class FreeplayState extends MusicBeat
 
 	function changeSelection(change:Int = 0)
 	{
-		#if !switch
-		NGio.logEvent('Fresh');
-		#end
-
 		// NGio.logEvent('Fresh');
 		FlxG.sound.play(Paths.sound('scrollMenu'), 0.4);
 
