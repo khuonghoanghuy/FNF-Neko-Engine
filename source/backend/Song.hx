@@ -21,9 +21,9 @@ typedef SwagSong =
 
 class Song
 {
-	public var song:String;
+	public var song:String = "";
 	public var notes:Array<SwagSection>;
-	public var bpm:Int;
+	public var bpm:Int = 100;
 	public var needsVoices:Bool = true;
 	public var speed:Float = 1;
 

@@ -119,15 +119,6 @@ class PlayState extends MusicBeat
 
 	var inCutscene:Bool = false;
 
-	#if desktop
-	// Discord RPC variables
-	var storyDifficultyText:String = "";
-	var iconRPC:String = "";
-	var songLength:Float = 0;
-	var detailsText:String = "";
-	var detailsPausedText:String = "";
-	#end
-
 	override public function create()
 	{
 		if (FlxG.sound.music != null)
