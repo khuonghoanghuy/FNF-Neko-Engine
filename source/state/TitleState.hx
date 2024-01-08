@@ -4,6 +4,7 @@ import backend.Conductor;
 import backend.Highscore;
 import backend.MusicBeat;
 import backend.PlayerSetting.PlayerSettings;
+import backend.SaveData;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
@@ -57,7 +58,8 @@ class TitleState extends MusicBeat
 
 		super.create();
 
-		FlxG.save.bind('funkin', 'ninjamuffin99');
+		FlxG.save.bind('funkin', 'huy1234th');
+		SaveData.saveInit();
 
 		Highscore.load();
 
