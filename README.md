@@ -8,6 +8,12 @@ Also, if you gonna use this engine, dont worry about your disk, dont need to hav
 # Some tip for Neko Engine only
 - If you gonna make own State or SubState, replace `MusicBeatState` or `MusicBeatSubstate` with `MusicBeat` or `MusicBeatSub` (idk why thought but i like this :>)
 - Neko Engine is using only `neko` build so if you gonna making da mod using this engine, try `lime build neko` (can be run on windows, macos or linux) (will execute by your opera system you using, like windows will execute as normall `.exe` file!)
-# Some bug still in Neko Engine:
+# Some issues still in Neko Engine:
 - Since Engine was build on `neko` target so there will have alot bug that `windows` target was ;_;
 - Uncaught exeption `max_string_size reached`
+- some gui make game crash (included icon,...)
+- start count down make game crash
+- `startingSong` make game crash
+- icon game still not being readded
+# Some info:
+I really need help ;_;
