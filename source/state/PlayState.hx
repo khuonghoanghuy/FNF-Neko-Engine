@@ -274,8 +274,6 @@ class PlayState extends MusicBeat
 		Conductor.songPosition = -5000;
 
 		var doof:DialogueBox = new DialogueBox(false, dialogue);
-		// doof.x += 70;
-		// doof.y = FlxG.height * 0.5;
 		doof.scrollFactor.set();
 		doof.finishThing = startCountdown;
 
@@ -331,13 +329,13 @@ class PlayState extends MusicBeat
 		scoreTxt.scrollFactor.set();
 		add(scoreTxt);
 
-		/*strumLineNotes.cameras = [camHUD];
-			notes.cameras = [camHUD];
-			scoreTxt.cameras = [camHUD];
-			doof.cameras = [camHUD]; */
-
+		/* */
+		strumLineNotes.cameras = [camHUD];
+		notes.cameras = [camHUD];
+		doof.cameras = [camHUD];
 		healthBar.cameras = [camHUD];
 		healthBarBG.cameras = [camHUD];
+		scoreTxt.cameras = [camHUD];
 
 		// startingSong = true;
 
@@ -373,6 +371,23 @@ class PlayState extends MusicBeat
 							});
 						});
 					});
+				case 'senpai':
+					schoolIntro(doof);
+				case 'roses':
+					FlxG.sound.play(Paths.sound('ANGRY'));
+					schoolIntro(doof);
+				case 'thorns':
+					schoolIntro(doof);
+				default:
+					startCountdown();
+			}
+		}
+		else
+		{
+			switch (curSong.toLowerCase())
+			{
+				default:
+					startCountdown();
 			}
 		}
 	}
@@ -480,10 +495,6 @@ class PlayState extends MusicBeat
 
 		startTimer = new FlxTimer().start(Conductor.crochet / 1000, function(tmr:FlxTimer)
 		{
-			dad.dance();
-			gf.dance();
-			boyfriend.playAnim('idle');
-
 			var introAssets:Map<String, Array<String>> = new Map<String, Array<String>>();
 			introAssets.set('default', ['ready', "set", "go"]);
 			introAssets.set('school', ['weeb/pixelUI/ready-pixel', 'weeb/pixelUI/set-pixel', 'weeb/pixelUI/date-pixel']);
@@ -564,7 +575,6 @@ class PlayState extends MusicBeat
 			}
 
 			swagCounter += 1;
-			// generateSong('fresh');
 		}, 5);
 	}
 
@@ -583,6 +593,10 @@ class PlayState extends MusicBeat
 			FlxG.sound.playMusic(Paths.inst(PlayState.SONG.song), 1, false);
 		FlxG.sound.music.onComplete = endSong;
 		vocals.play();
+
+		dad.dance();
+		gf.dance();
+		boyfriend.playAnim('idle');
 	}
 
 	var debugNum:Int = 0;
