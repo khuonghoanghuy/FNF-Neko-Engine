@@ -887,6 +887,8 @@ class PlayState extends MusicBeat
 	{
 		super.update(elapsed);
 
+		scoreTxt.text = "Score: " + songScore;
+
 		if (startingSong)
 		{
 			if (startedCountdown)
@@ -915,6 +917,11 @@ class PlayState extends MusicBeat
 					// trace('MISSED FRAME');
 				}
 			}
+		}
+
+		if (FlxG.keys.justPressed.SEVEN)
+		{
+			FlxG.switchState(new state.ChartingState());
 		}
 	}
 }
