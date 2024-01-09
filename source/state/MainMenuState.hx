@@ -152,6 +152,8 @@ class MainMenuState extends MusicBeat
 										FlxG.switchState(new state.StoryMenuState());
 									case "freeplay":
 										FlxG.switchState(new state.FreeplayState());
+									case "options":
+										FlxG.switchState(new state.OptionsState());
 								}
 							});
 						}

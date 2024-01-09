@@ -1,8 +1,8 @@
 package;
 
+import backend.MemoryCounter;
 import flixel.FlxGame;
 import flixel.FlxState;
-import openfl.Assets;
 import openfl.Lib;
 import openfl.display.FPS;
 import openfl.display.Sprite;
@@ -46,7 +46,6 @@ class Main extends Sprite
 		{
 			removeEventListener(Event.ADDED_TO_STAGE, init);
 		}
-
 		setupGame();
 	}
 
@@ -69,9 +68,7 @@ class Main extends Sprite
 		#end
 
 		addChild(new FlxGame(gameWidth, gameHeight, initialState, framerate, framerate, skipSplash, startFullscreen));
-
-		#if !mobile
 		addChild(new FPS(10, 3, 0xFFFFFF));
-		#end
+		addChild(new MemoryCounter(10, 3, 0xFFFFFF));
 	}
 }

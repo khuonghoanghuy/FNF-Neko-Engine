@@ -2,13 +2,22 @@ package backend;
 
 import backend.Conductor.BPMChangeEvent;
 import backend.PlayerSetting.PlayerSettings;
+import flixel.FlxG;
 import flixel.FlxSubState;
+import openfl.Lib;
+import openfl.events.Event;
+import openfl.system.System;
 
 class MusicBeatSub extends FlxSubState
 {
 	public function new()
 	{
 		super();
+		Lib.current.stage.frameRate = 999;
+		FlxG.stage.addEventListener(Event.ACTIVATE, function(_)
+		{
+			System.gc();
+		});
 	}
 
 	private var lastBeat:Float = 0;

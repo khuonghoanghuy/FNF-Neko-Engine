@@ -15,7 +15,7 @@ import flixel.text.FlxText;
 import flixel.util.FlxColor;
 import lime.utils.Assets;
 
-class OptionsMenu extends MusicBeat
+class OptionsState extends MusicBeat
 {
 	var selector:FlxText;
 	var curSelected:Int = 0;
@@ -27,7 +27,6 @@ class OptionsMenu extends MusicBeat
 	override function create()
 	{
 		var menuBG:FlxSprite = new FlxSprite().loadGraphic(Paths.image('menuDesat'));
-		controlsStrings = CoolUtil.coolTextFile(Paths.txt('controls'));
 		menuBG.color = 0xFFea71fd;
 		menuBG.setGraphicSize(Std.int(menuBG.width * 1.1));
 		menuBG.updateHitbox();

@@ -4,6 +4,9 @@ import backend.Conductor.BPMChangeEvent;
 import backend.PlayerSetting;
 import flixel.FlxG;
 import flixel.addons.ui.FlxUIState;
+import openfl.Lib;
+import openfl.events.Event;
+import openfl.system.System;
 
 class MusicBeat extends FlxUIState
 {
@@ -20,6 +23,11 @@ class MusicBeat extends FlxUIState
 	override function create()
 	{
 		super.create();
+		Lib.current.stage.frameRate = 999;
+		FlxG.stage.addEventListener(Event.ACTIVATE, function(_)
+		{
+			System.gc();
+		});
 	}
 
 	override function update(elapsed:Float)

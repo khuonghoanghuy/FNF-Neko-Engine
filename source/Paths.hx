@@ -2,6 +2,9 @@ package;
 
 import flixel.FlxG;
 import flixel.graphics.frames.FlxAtlasFrames;
+import openfl.display.BitmapData;
+import openfl.events.Event;
+import openfl.system.System;
 import openfl.utils.AssetType;
 import openfl.utils.Assets as OpenFlAssets;
 
@@ -32,6 +35,12 @@ class Paths
 				return levelPath;
 		}
 
+		FlxG.stage.addEventListener(Event.ACTIVATE, function(_)
+		{
+			System.gc();
+			openfl.Assets.unloadLibrary(file);
+		});
+
 		return getPreloadPath(file);
 	}
 
@@ -42,11 +51,21 @@ class Paths
 
 	inline static function getLibraryPathForce(file:String, library:String)
 	{
+		FlxG.stage.addEventListener(Event.ACTIVATE, function(_)
+		{
+			System.gc();
+			openfl.Assets.unloadLibrary(file);
+		});
 		return '$library:assets/$library/$file';
 	}
 
 	inline static function getPreloadPath(file:String)
 	{
+		FlxG.stage.addEventListener(Event.ACTIVATE, function(_)
+		{
+			System.gc();
+			openfl.Assets.unloadLibrary(file);
+		});
 		return 'assets/$file';
 	}
 
@@ -97,6 +116,7 @@ class Paths
 
 	inline static public function image(key:String, ?library:String)
 	{
+		FlxG.bitmap.add(BitmapData.fromFile('images/$key.png'));
 		return getPath('images/$key.png', IMAGE, library);
 	}
 
