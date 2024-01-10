@@ -1,7 +1,7 @@
-# FNF Neko Engine (SUPER WIP)
+# FNF Neko Engine (WIP)
 A Port of Friday Night Funkin' Port for `hl` target (like build for windows but more faster)
 
-This is a **SUPER WIP** mod, which means that it's not ready to be used yet
+This is a **WIP** mod, which means that it's not ready to be used yet
 
 Also, if you gonna use this engine, dont worry about your disk, dont need to have visual studio thing yay!
 
