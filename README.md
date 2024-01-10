@@ -13,6 +13,5 @@ Also, if you gonna use this engine, dont worry about your disk, dont need to hav
 - some gui make game crash (included icon,...)
 - icon game still not being readded
 - charting state cannot played song when pressing space
-- Almost working but the song isn't playing
 # Some info:
 I really need help ;_;
