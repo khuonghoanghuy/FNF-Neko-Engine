@@ -29,6 +29,7 @@ import object.Character;
 import object.DialogueBox;
 import object.HealthIcon;
 import object.Note;
+import subState.PauseSubState;
 
 using StringTools;
 
@@ -496,9 +497,9 @@ class PlayState extends MusicBeat
 		startTimer = new FlxTimer().start(Conductor.crochet / 1000, function(tmr:FlxTimer)
 		{
 			var introAssets:Map<String, Array<String>> = new Map<String, Array<String>>();
-			introAssets.set('default', ['ready', "set", "go"]);
-			introAssets.set('school', ['weeb/pixelUI/ready-pixel', 'weeb/pixelUI/set-pixel', 'weeb/pixelUI/date-pixel']);
-			introAssets.set('schoolEvil', ['weeb/pixelUI/ready-pixel', 'weeb/pixelUI/set-pixel', 'weeb/pixelUI/date-pixel']);
+			introAssets.set('default', ['gui/default/ready', "gui/default/set", "gui/default/go"]);
+			introAssets.set('school', ['gui/pixel/ready-pixel', 'gui/pixel/set-pixel', 'gui/pixel/date-pixel']);
+			introAssets.set('schoolEvil', ['gui/pixel/ready-pixel', 'gui/pixel/set-pixel', 'gui/pixel/date-pixel']);
 
 			var introAlts:Array<String> = introAssets.get('default');
 			var altSuffix:String = "";
@@ -513,7 +514,6 @@ class PlayState extends MusicBeat
 			}
 
 			switch (swagCounter)
-
 			{
 				case 0:
 					FlxG.sound.play(Paths.sound('intro3'), 0.6);
@@ -625,8 +625,6 @@ class PlayState extends MusicBeat
 		// NEW SHIT
 		noteData = songData.notes;
 
-		var playerCounter:Int = 0;
-
 		var daBeats:Int = 0; // Not exactly representative of 'daBeats' lol, just how much it has looped
 		for (section in noteData)
 		{
@@ -709,7 +707,7 @@ class PlayState extends MusicBeat
 			switch (curStage)
 			{
 				case 'school' | 'schoolEvil':
-					babyArrow.loadGraphic(Paths.image('weeb/pixelUI/arrows-pixels'), true, 17, 17);
+					babyArrow.loadGraphic(Paths.image('gui/pixel/arrows-pixels'), true, 17, 17);
 					babyArrow.animation.add('green', [6]);
 					babyArrow.animation.add('red', [7]);
 					babyArrow.animation.add('blue', [5]);
@@ -744,7 +742,7 @@ class PlayState extends MusicBeat
 					}
 
 				default:
-					babyArrow.frames = Paths.getSparrowAtlas('NOTE_assets');
+					babyArrow.frames = Paths.getSparrowAtlas('gui/default/NOTE_assets');
 					babyArrow.animation.addByPrefix('green', 'arrowUP');
 					babyArrow.animation.addByPrefix('blue', 'arrowDOWN');
 					babyArrow.animation.addByPrefix('purple', 'arrowLEFT');
@@ -936,6 +934,15 @@ class PlayState extends MusicBeat
 		if (FlxG.keys.justPressed.SEVEN)
 		{
 			FlxG.switchState(new state.ChartingState());
+		}
+
+		if (FlxG.keys.justPressed.ENTER)
+		{
+			persistentUpdate = false;
+			persistentDraw = true;
+			paused = true;
+
+			openSubState(new PauseSubState(boyfriend.getScreenPosition().x, boyfriend.getScreenPosition().y));
 		}
 	}
 }

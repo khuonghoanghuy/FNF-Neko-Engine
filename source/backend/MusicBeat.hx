@@ -23,7 +23,7 @@ class MusicBeat extends FlxUIState
 	override function create()
 	{
 		super.create();
-		Lib.current.stage.frameRate = 999;
+		Lib.current.stage.frameRate = 120;
 		FlxG.stage.addEventListener(Event.ACTIVATE, function(_)
 		{
 			System.gc();

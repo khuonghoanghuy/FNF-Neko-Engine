@@ -13,7 +13,7 @@ class MusicBeatSub extends FlxSubState
 	public function new()
 	{
 		super();
-		Lib.current.stage.frameRate = 999;
+		Lib.current.stage.frameRate = 120;
 		FlxG.stage.addEventListener(Event.ACTIVATE, function(_)
 		{
 			System.gc();
