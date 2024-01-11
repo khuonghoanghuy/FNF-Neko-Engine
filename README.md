@@ -14,5 +14,6 @@ Also, if you gonna use this engine, dont worry about your disk, dont need to hav
 - some gui make game crash (included icon,...)
 - icon game still not being readded
 - charting state cannot played song when pressing space
+- Pop up is only display `sh!t` not other one
 # Some info:
 I really need help ;_;
