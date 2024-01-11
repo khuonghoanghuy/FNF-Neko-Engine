@@ -949,9 +949,6 @@ class ChartingState extends MusicBeat
 			_song.notes[curSection].sectionNotes.push([noteStrum, (noteData + 4) % 8, noteSus]);
 		}
 
-		trace(noteStrum);
-		trace(curSection);
-
 		updateGrid();
 		updateNoteUI();
 

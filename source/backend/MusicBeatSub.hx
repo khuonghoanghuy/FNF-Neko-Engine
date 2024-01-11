@@ -13,9 +13,11 @@ class MusicBeatSub extends FlxSubState
 	public function new()
 	{
 		super();
-		Lib.current.stage.frameRate = 120;
 		FlxG.stage.addEventListener(Event.ACTIVATE, function(_)
 		{
+			FlxG.fixedTimestep = false;
+			var timer = lime.system.System.getTimer();
+			Lib.current.stage.frameRate = timer;
 			System.gc();
 		});
 	}

@@ -1,5 +1,7 @@
 package backend;
 
+import flixel.FlxG;
+import flixel.math.FlxMath;
 import lime.utils.Assets;
 import state.PlayState;
 
@@ -34,5 +36,30 @@ class CoolUtil
 			dumbArray.push(i);
 		}
 		return dumbArray;
+	}
+
+	inline public static function boundTo(value:Float, min:Float, max:Float):Float
+	{
+		return Math.max(min, Math.min(max, value));
+	}
+
+	/**
+		Lerps camera, but accountsfor framerate shit?
+		Right now it's simply for use to change the followLerp variable of a camera during update
+		TODO LATER MAYBE:
+			Actually make and modify the scroll and lerp shit in it's own function
+			instead of solely relying on changing the lerp on the fly
+	 */
+	public static function camLerpShit(lerp:Float):Float
+	{
+		return lerp * (FlxG.elapsed / (1 / 60));
+	}
+
+	/*
+	 * just lerp that does camLerpShit for u so u dont have to do it every time
+	 */
+	public static function coolLerp(a:Float, b:Float, ratio:Float):Float
+	{
+		return FlxMath.lerp(a, b, camLerpShit(ratio));
 	}
 }
