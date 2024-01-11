@@ -6,19 +6,20 @@ import flixel.FlxG;
 import flixel.FlxSubState;
 import openfl.Lib;
 import openfl.events.Event;
-import openfl.system.System;
 
 class MusicBeatSub extends FlxSubState
 {
+	public static var isSubStateMode:Bool = false;
+
 	public function new()
 	{
 		super();
+		isSubStateMode = true;
+		FlxG.fixedTimestep = false;
+		openfl.system.System.gc();
 		FlxG.stage.addEventListener(Event.ACTIVATE, function(_)
 		{
-			FlxG.fixedTimestep = false;
-			var timer = lime.system.System.getTimer();
-			Lib.current.stage.frameRate = timer;
-			System.gc();
+			Lib.current.stage.frameRate = FlxG.save.data.maxiumFPSCapper;
 		});
 	}
 
@@ -71,5 +72,17 @@ class MusicBeatSub extends FlxSubState
 	public function beatHit():Void
 	{
 		// do literally nothing dumbass
+	}
+
+	override function close()
+	{
+		super.close();
+		isSubStateMode = false;
+	}
+
+	override function closeSubState()
+	{
+		super.closeSubState();
+		isSubStateMode = false;
 	}
 }

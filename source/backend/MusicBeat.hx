@@ -23,12 +23,11 @@ class MusicBeat extends FlxUIState
 	override function create()
 	{
 		super.create();
+		FlxG.fixedTimestep = false;
+		openfl.system.System.gc();
 		FlxG.stage.addEventListener(Event.ACTIVATE, function(_)
 		{
-			FlxG.fixedTimestep = false;
-			var timer = lime.system.System.getTimer();
-			Lib.current.stage.frameRate = timer;
-			System.gc();
+			Lib.current.stage.frameRate = 999;
 		});
 	}
 

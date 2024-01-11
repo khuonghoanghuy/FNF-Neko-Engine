@@ -105,6 +105,7 @@ class PlayState extends MusicBeat
 
 	var talking:Bool = true;
 	var songScore:Int = 0;
+	var songMisses:Int = 0;
 	var scoreTxt:FlxText;
 
 	public static var campaignScore:Int = 0;
@@ -565,8 +566,17 @@ class PlayState extends MusicBeat
 		iconP2.y = healthBar.y - (iconP2.height / 2);
 		add(iconP2);
 
-		scoreTxt = new FlxText(healthBarBG.x + healthBarBG.width - 190, healthBarBG.y + 30, 0, "", 20);
-		scoreTxt.setFormat(Paths.font("vcr.ttf"), 20, FlxColor.WHITE, RIGHT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		if (FlxG.save.data.advanceDisplay)
+		{
+			scoreTxt = new FlxText(0, healthBarBG.y + 36, FlxG.width, "", 20);
+			scoreTxt.setFormat(Paths.font("vcr.ttf"), 20, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		}
+		else
+		{
+			scoreTxt = new FlxText(healthBarBG.x + healthBarBG.width - 190, healthBarBG.y + 30, 0, "", 20);
+			scoreTxt.setFormat(Paths.font("vcr.ttf"), 20, FlxColor.WHITE, RIGHT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		}
+
 		scoreTxt.scrollFactor.set();
 		add(scoreTxt);
 
@@ -1166,7 +1176,7 @@ class PlayState extends MusicBeat
 	{
 		super.update(elapsed);
 
-		scoreTxt.text = "Score: " + songScore;
+		scoreTxt.text = "Score: " + songScore + " - Misses: " + songMisses;
 
 		if (startingSong)
 		{
@@ -1381,6 +1391,7 @@ class PlayState extends MusicBeat
 					{
 						health -= 0.0475;
 						vocals.volume = 0;
+						noteMiss(daNote.noteData);
 					}
 
 					daNote.active = false;
@@ -1595,7 +1606,7 @@ class PlayState extends MusicBeat
 
 		songScore += score;
 
-		var pixelShitPart1:String = "gui/default";
+		var pixelShitPart1:String = "gui/default/";
 		var pixelShitPart2:String = '';
 
 		if (curStage.startsWith('school'))
@@ -1717,6 +1728,7 @@ class PlayState extends MusicBeat
 			combo = 0;
 
 			songScore -= 10;
+			songMisses++;
 
 			FlxG.sound.play(Paths.soundRandom('missnote', 1, 3), FlxG.random.float(0.1, 0.2));
 			// FlxG.sound.play(Paths.sound('missnote1'), 1, false);

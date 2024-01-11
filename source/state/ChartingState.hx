@@ -571,7 +571,7 @@ class ChartingState extends MusicBeat
 
 		if (!typingShit.hasFocus)
 		{
-			if (FlxG.keys.justPressed.SPACE || FlxG.keys.pressed.SPACE)
+			if (FlxG.keys.justPressed.SPACE)
 			{
 				if (FlxG.sound.music.playing)
 				{

@@ -1,5 +1,6 @@
 package state;
 
+import backend.CoolUtil;
 import backend.MusicBeat;
 import flixel.FlxG;
 import flixel.FlxObject;
@@ -78,9 +79,9 @@ class MainMenuState extends MusicBeat
 		}
 
 		FlxG.camera.follow(camFollow, null, 0.06);
-		var versionShit:FlxText = new FlxText(5, FlxG.height - 18, 0, "v" + Application.current.meta.get('version'), 12);
+		var versionShit:FlxText = new FlxText(5, FlxG.height - 18, 0, "Neko Engine v" + Application.current.meta.get('version') + " - FNF Engine v0.2.7.1", 18);
 		versionShit.scrollFactor.set();
-		versionShit.setFormat("VCR OSD Mono", 16, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		versionShit.setFormat("VCR OSD Mono", 18, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		add(versionShit);
 
 		// NG.core.calls.event.logEvent('swag').send();
@@ -92,6 +93,8 @@ class MainMenuState extends MusicBeat
 
 	override function update(elapsed:Float)
 	{
+		FlxG.camera.followLerp = CoolUtil.camLerpShit(0.06);
+
 		if (FlxG.sound.music.volume < 0.8)
 		{
 			FlxG.sound.music.volume += 0.5 * FlxG.elapsed;

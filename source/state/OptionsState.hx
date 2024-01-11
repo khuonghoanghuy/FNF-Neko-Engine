@@ -12,17 +12,23 @@ import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.input.keyboard.FlxKey;
 import flixel.math.FlxMath;
 import flixel.text.FlxText;
+import flixel.tweens.FlxEase;
+import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
 import lime.utils.Assets;
+import openfl.Lib;
+import openfl.events.Event;
 
 class OptionsState extends MusicBeat
 {
 	var selector:FlxText;
 	var curSelected:Int = 0;
 
-	var controlsStrings:Array<String> = ["Controls", "Ghost tap", "Downscroll", "Advance Display"];
+	var controlsStrings:Array<String> = ["Controls", "Ghost tap", "Downscroll", "Advance Display" /*, "Maxium FPS Cap"*/];
 
 	private var grpControls:FlxTypedGroup<Alphabet>;
+	var controlsStuff:String;
+	var versionShit:FlxText;
 
 	override function create()
 	{
@@ -37,6 +43,7 @@ class OptionsState extends MusicBeat
 		var grid:FlxBackdrop = new FlxBackdrop(FlxGridOverlay.createGrid(80, 80, 160, 160, true, 0x33FFFFFF, 0x0));
 		grid.velocity.set(40, 40);
 		grid.alpha = 0;
+		FlxTween.tween(grid, {alpha: 1}, 0.5, {ease: FlxEase.backOut});
 		add(grid);
 
 		grpControls = new FlxTypedGroup<Alphabet>();
@@ -50,6 +57,13 @@ class OptionsState extends MusicBeat
 			grpControls.add(controlLabel);
 			// DONT PUT X IN THE FIRST PARAMETER OF new ALPHABET() !!
 		}
+
+		versionShit = new FlxText(5, FlxG.height - 18, 0, controlsStuff, 18);
+		versionShit.scrollFactor.set();
+		versionShit.setFormat("VCR OSD Mono", 18, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		add(versionShit);
+
+		changeSelection();
 
 		super.create();
 	}
@@ -80,6 +94,41 @@ class OptionsState extends MusicBeat
 			changeSelection(-1);
 		if (controls.DOWN_P)
 			changeSelection(1);
+		if (controls.LEFT)
+		{
+			switch (controlsStrings[curSelected])
+			{
+				case "Maxium FPS Cap":
+					if (FlxG.save.data.maxiumFPSCapper == 60)
+					{
+						FlxG.save.data.maxiumFPSCapper = 60;
+					}
+					else
+					{
+						FlxG.save.data.maxiumFPSCapper -= 1;
+					}
+					FlxG.stage.addEventListener(Event.ACTIVATE, function(_)
+					{
+						Lib.current.stage.frameRate = FlxG.save.data.maxiumFPSCapper;
+					});
+			}
+			FlxG.save.flush();
+			FlxG.save.bind('funkin', 'huy1234th');
+		}
+		if (controls.RIGHT)
+		{
+			switch (controlsStrings[curSelected])
+			{
+				case "Maxium FPS Cap":
+					FlxG.save.data.maxiumFPSCapper += 1;
+					FlxG.stage.addEventListener(Event.ACTIVATE, function(_)
+					{
+						Lib.current.stage.frameRate = FlxG.save.data.maxiumFPSCapper;
+					});
+			}
+			FlxG.save.flush();
+			FlxG.save.bind('funkin', 'huy1234th');
+		}
 	}
 
 	function changeSelection(change:Int = 0)
@@ -87,6 +136,20 @@ class OptionsState extends MusicBeat
 		FlxG.sound.play(Paths.sound('scrollMenu'), 0.4);
 
 		curSelected += change;
+
+		switch (controlsStrings[curSelected])
+		{
+			case "Controls":
+				controlsStuff = "Change the Keybind from keyboard (bro idk how to write this ;_;): ";
+			case "Ghost tap":
+				controlsStuff = "Help you play more easier than ever with ghost tap: ";
+			case "Downscroll":
+				controlsStuff = "If you can't play upscroll, downscroll will help you play much better: ";
+			case "Advande Display":
+				controlsStuff = "Display more stuff like Accuracy, Ranking and more: ";
+			case "Maxium FPS Cap":
+				controlsStuff = "Let FPS capping more FPS than ever (WARMING: THIS ONE IS GOT MUCH FPS MAY CAUSE CRASH GAME!!): ";
+		}
 
 		if (curSelected < 0)
 			curSelected = grpControls.length - 1;
