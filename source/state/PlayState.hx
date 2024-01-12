@@ -1588,21 +1588,21 @@ class PlayState extends MusicBeat
 
 		var daRating:String = "sick";
 
-		if (noteDiff > Conductor.safeZoneOffset * 0.9)
-		{
-			daRating = 'shit';
-			score = 50;
-		}
-		else if (noteDiff > Conductor.safeZoneOffset * 0.75)
-		{
-			daRating = 'bad';
-			score = 100;
-		}
-		else if (noteDiff > Conductor.safeZoneOffset * 0.2)
-		{
-			daRating = 'good';
-			score = 200;
-		}
+		/*if (noteDiff > Conductor.safeZoneOffset * -2)
+			{
+				daRating = 'shit';
+				score = 50;
+			}
+			else if (noteDiff > Conductor.safeZoneOffset * 0.9)
+			{
+				daRating = 'bad';
+				score = 100;
+			}
+			else if (noteDiff > Conductor.safeZoneOffset * 0.75)
+			{
+				daRating = 'good';
+				score = 200;
+		}*/
 
 		songScore += score;
 
@@ -1628,9 +1628,10 @@ class PlayState extends MusicBeat
 		comboSpr.x = coolText.x;
 		comboSpr.acceleration.y = 600;
 		comboSpr.velocity.y -= 150;
-
+		comboSpr.cameras = [camHUD];
 		comboSpr.velocity.x += FlxG.random.int(1, 10);
-		add(rating);
+		// add(rating);
+		add(comboSpr);
 
 		if (!curStage.startsWith('school'))
 		{
@@ -1676,9 +1677,8 @@ class PlayState extends MusicBeat
 			numScore.acceleration.y = FlxG.random.int(200, 300);
 			numScore.velocity.y -= FlxG.random.int(140, 160);
 			numScore.velocity.x = FlxG.random.float(-5, 5);
-
-			if (combo >= 10 || combo == 0)
-				add(numScore);
+			numScore.cameras = [camHUD];
+			add(numScore);
 
 			FlxTween.tween(numScore, {alpha: 0}, 0.2, {
 				onComplete: function(tween:FlxTween)
@@ -1914,10 +1914,15 @@ class PlayState extends MusicBeat
 				Conductor.changeBPM(SONG.notes[Math.floor(curStep / 16)].bpm);
 				FlxG.log.add('CHANGED BPM!');
 			}
+			// Dad doesnt interupt his own notes
+			if (SONG.notes[Math.floor(curStep / 16)].mustHitSection)
+				dad.dance();
+			else // woah
+				dad.dance();
 		}
 
-		iconP1.setGraphicSize(Std.int(iconP1.width + 30));
-		iconP2.setGraphicSize(Std.int(iconP2.width + 30));
+		iconP1.setGraphicSize(Std.int(iconP1.width + 25));
+		iconP2.setGraphicSize(Std.int(iconP2.width + 25));
 
 		iconP1.updateHitbox();
 		iconP2.updateHitbox();

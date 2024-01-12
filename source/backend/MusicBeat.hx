@@ -27,7 +27,7 @@ class MusicBeat extends FlxUIState
 		openfl.system.System.gc();
 		FlxG.stage.addEventListener(Event.ACTIVATE, function(_)
 		{
-			Lib.current.stage.frameRate = 999;
+			Lib.current.stage.frameRate = 120;
 		});
 	}
 

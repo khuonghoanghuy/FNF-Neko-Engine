@@ -19,7 +19,7 @@ class MusicBeatSub extends FlxSubState
 		openfl.system.System.gc();
 		FlxG.stage.addEventListener(Event.ACTIVATE, function(_)
 		{
-			Lib.current.stage.frameRate = FlxG.save.data.maxiumFPSCapper;
+			Lib.current.stage.frameRate = 120;
 		});
 	}
 
