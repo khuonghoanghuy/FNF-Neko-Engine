@@ -32,6 +32,7 @@ import object.Character;
 import object.DialogueBox;
 import object.HealthIcon;
 import object.Note;
+import subState.GameOverSubstate;
 import subState.PauseSubState;
 
 using StringTools;
@@ -1220,6 +1221,20 @@ class PlayState extends MusicBeat
 			paused = true;
 
 			openSubState(new PauseSubState(boyfriend.getScreenPosition().x, boyfriend.getScreenPosition().y));
+		}
+
+		if (health <= 0)
+		{
+			boyfriend.stunned = true;
+
+			persistentUpdate = false;
+			persistentDraw = false;
+			paused = true;
+
+			vocals.stop();
+			FlxG.sound.music.stop();
+
+			openSubState(new GameOverSubstate(boyfriend.getScreenPosition().x, boyfriend.getScreenPosition().y));
 		}
 
 		if (unspawnNotes[0] != null)
