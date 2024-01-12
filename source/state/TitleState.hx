@@ -60,6 +60,7 @@ class TitleState extends MusicBeat
 
 		FlxG.save.bind('funkin', 'huy1234th');
 		SaveData.saveInit();
+		// SaveData.swagData.loadconfig();
 
 		Highscore.load();
 

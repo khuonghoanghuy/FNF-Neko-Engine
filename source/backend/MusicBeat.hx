@@ -6,7 +6,6 @@ import flixel.FlxG;
 import flixel.addons.ui.FlxUIState;
 import openfl.Lib;
 import openfl.events.Event;
-import openfl.system.System;
 
 class MusicBeat extends FlxUIState
 {

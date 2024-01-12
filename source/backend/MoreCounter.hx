@@ -9,7 +9,7 @@ import openfl.text.TextFormat;
  * From FPS class extension to display memory usage.
  * @author Kirill Poletaev
  */
-class MemoryCounter extends TextField
+class MoreCounter extends TextField
 {
 	private var times:Array<Float>;
 	private var memPeak:Float = 0;
@@ -21,7 +21,7 @@ class MemoryCounter extends TextField
 		x = inX;
 		y = inY;
 		selectable = false;
-		defaultTextFormat = new TextFormat("_sans", 13, inCol);
+		defaultTextFormat = new TextFormat("_sans", 12, inCol, false, false, false, null, null, LEFT, null, null, null, null);
 		// defaultTextFormat = new TextFormat("_sans", 14, inCol);
 
 		addEventListener(Event.ENTER_FRAME, onEnter);
@@ -38,6 +38,8 @@ class MemoryCounter extends TextField
 		if (visible)
 		{
 			text = "\nMemory: " + mem + " MB\nMemory Peak: " + memPeak + " MB";
+			text += "\nPlatform Label: " + lime.system.System.platformLabel;
+			text += "\nPlatform Version: " + lime.system.System.platformVersion;
 		}
 	}
 }

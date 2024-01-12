@@ -1055,7 +1055,7 @@ class PlayState extends MusicBeat
 			}
 
 			babyArrow.animation.play('static');
-			babyArrow.x += 50;
+			babyArrow.x += 92;
 			babyArrow.x += ((FlxG.width / 2) * player);
 
 			strumLineNotes.add(babyArrow);
@@ -1176,6 +1176,7 @@ class PlayState extends MusicBeat
 	override function update(elapsed:Float)
 	{
 		super.update(elapsed);
+		FlxG.camera.followLerp = CoolUtil.camLerpShit(0.04);
 
 		scoreTxt.text = "Score: " + songScore + " - Misses: " + songMisses;
 

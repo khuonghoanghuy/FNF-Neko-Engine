@@ -1,6 +1,6 @@
 package;
 
-import backend.MemoryCounter;
+import backend.MoreCounter;
 import flixel.FlxGame;
 import flixel.FlxState;
 import openfl.Lib;
@@ -68,6 +68,6 @@ class Main extends Sprite
 		#end
 		addChild(new FlxGame(gameWidth, gameHeight, initialState, framerate, framerate, skipSplash, startFullscreen));
 		addChild(new FPS(10, 3, 0xFFFFFF));
-		addChild(new MemoryCounter(10, 3, 0xFFFFFF));
+		addChild(new MoreCounter(10, 3, 0xFFFFFF));
 	}
 }

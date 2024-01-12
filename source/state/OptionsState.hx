@@ -24,7 +24,10 @@ class OptionsState extends MusicBeat
 	var selector:FlxText;
 	var curSelected:Int = 0;
 
-	var controlsStrings:Array<String> = ["Controls", "Ghost tap", "Downscroll", "Advance Display" /*, "Maxium FPS Cap"*/];
+	var controlsStrings:Array<String> = [
+		/*"Controls",*/ "Ghost tap",
+		"Downscroll",
+		"Advance Display" /*, "Maxium FPS Cap"*/];
 
 	private var grpControls:FlxTypedGroup<Alphabet>;
 	var controlsStuff:String;
@@ -77,6 +80,7 @@ class OptionsState extends MusicBeat
 			switch (controlsStrings[curSelected])
 			{
 				case "Controls":
+					FlxG.switchState(new ControlsState());
 				case "Ghost tap":
 					FlxG.save.data.ghosttap = !FlxG.save.data.ghosttap;
 				case "Downscroll":
