@@ -11,9 +11,7 @@ Also, if you gonna use this engine, dont worry about your disk, dont need to hav
 - Speed to build a execute file is more faster than and is still on the desktop, wow
 # Some issues still in Neko Engine:
 - Uncaught exeption `max_string_size reached` (already fixed but i need to checked first) (also it from `neko` target too)
-- some gui make game crash (included icon,...)
 - icon game still not being readded
-- charting state cannot played song when pressing space
-- Pop up is only display `sh!t` not other one
+- Pop up is only display `sh!t` not other one (replace with none)
 # Some info:
 I really need help ;_;
