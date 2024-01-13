@@ -23,6 +23,8 @@ class MainMenuState extends MusicBeat
 
 	var optionShit:Array<String> = ['story mode', 'freeplay', 'donate', 'options'];
 
+	public static var curNekoEngineVersion:String = "0.1";
+
 	var magenta:FlxSprite;
 	var camFollow:FlxObject;
 
@@ -79,7 +81,12 @@ class MainMenuState extends MusicBeat
 		}
 
 		FlxG.camera.follow(camFollow, null, 0.06);
-		var versionShit:FlxText = new FlxText(5, FlxG.height - 18, 0, "Neko Engine v" + Application.current.meta.get('version') + " - FNF Engine v0.2.7.1", 18);
+		var versionShit:FlxText = new FlxText(5, FlxG.height
+			- 22, 0,
+			"Neko Engine v"
+			+ curNekoEngineVersion
+			+ " - FNF Engine v"
+			+ Application.current.meta.get('version'), 18);
 		versionShit.scrollFactor.set();
 		versionShit.setFormat("VCR OSD Mono", 18, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		add(versionShit);
