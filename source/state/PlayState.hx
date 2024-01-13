@@ -551,6 +551,8 @@ class PlayState extends MusicBeat
 		FlxG.worldBounds.set(0, 0, FlxG.width, FlxG.height);
 
 		FlxG.fixedTimestep = false;
+		Profile.newTracker(FlxText, ["x", "y"], [FlxObject]);
+		Profile.newTracker(FlxSprite, ["frameWidth", "frameHeight", "alpha", "origin", "offset", "scale"], [FlxObject]);
 
 		healthBarBG = new FlxSprite(0, FlxG.height * 0.9).loadGraphic(Paths.image('gui/default/healthBar'));
 		healthBarBG.screenCenter(X);

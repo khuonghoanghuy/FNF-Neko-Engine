@@ -2,6 +2,9 @@ package debug;
 
 import flixel.FlxG;
 
+/**
+ * Note: This is only work on DEBUG Build
+ */
 class Watch
 {
 	public static function add(object:Dynamic, field:String, ?displayName:String)
