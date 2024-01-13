@@ -1516,7 +1516,7 @@ class PlayState extends MusicBeat
 
 		var controlArray:Array<Bool> = [leftP, downP, upP, rightP];
 
-		// FlxG.watch.addQuick('asdfa', upP);
+		// Watch.addQuick('asdfa', upP);
 		if ((upP || rightP || downP || leftP) && !boyfriend.stunned && generatedMusic)
 		{
 			boyfriend.holdTimer = 0;
