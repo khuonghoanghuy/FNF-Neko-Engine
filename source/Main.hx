@@ -66,6 +66,9 @@ class Main extends Sprite
 		#if !debug
 		initialState = TitleState;
 		#end
+		#if debug
+		flixel.addons.studio.FlxStudio.create();
+		#end
 		addChild(new FlxGame(gameWidth, gameHeight, initialState, framerate, framerate, skipSplash, startFullscreen));
 		addChild(new FPS(10, 3, 0xFFFFFF));
 		addChild(new MoreCounter(10, 3, 0xFFFFFF));

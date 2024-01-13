@@ -12,7 +12,9 @@ import openfl.text.TextFormat;
 class MoreCounter extends TextField
 {
 	private var times:Array<Float>;
+	#if debug
 	private var memPeak:Float = 0;
+	#end
 
 	public function new(inX:Float = 10.0, inY:Float = 10.0, inCol:Int = 0x000000)
 	{
@@ -32,14 +34,19 @@ class MoreCounter extends TextField
 	private function onEnter(_)
 	{
 		var mem:Float = Math.round(System.totalMemory / 1024 / 1024 * 100) / 100;
+		#if debug
 		if (mem > memPeak)
 			memPeak = mem;
+		#end
 
 		if (visible)
 		{
-			text = "\nMemory: " + mem + " MB\nMemory Peak: " + memPeak + " MB";
+			text = "\nMemory: " + mem + " MB";
+			#if debug
+			text += "\nMemory Peak: " + memPeak + " MB";
 			text += "\nPlatform Label: " + lime.system.System.platformLabel;
 			text += "\nPlatform Version: " + lime.system.System.platformVersion;
+			#end
 		}
 	}
 }

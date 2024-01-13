@@ -107,7 +107,11 @@ class PlayState extends MusicBeat
 	var talking:Bool = true;
 	var songScore:Int = 0;
 	var songMisses:Int = 0;
+	private var accuracy:Float = 0.00;
+	private var totalNotesHit:Float = 0;
+	private var totalPlayed:Int = 0;
 	var scoreTxt:FlxText;
+	var accuracyTxt:FlxText;
 
 	public static var campaignScore:Int = 0;
 
@@ -572,8 +576,13 @@ class PlayState extends MusicBeat
 
 		if (FlxG.save.data.advanceDisplay)
 		{
-			scoreTxt = new FlxText(0, healthBarBG.y + 36, FlxG.width, "", 20);
-			scoreTxt.setFormat(Paths.font("vcr.ttf"), 20, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+			scoreTxt = new FlxText(0, healthBarBG.y + 36, FlxG.width, "", 18);
+			scoreTxt.setFormat(Paths.font("vcr.ttf"), 18, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+			accuracyTxt = new FlxText(5, healthBarBG.y + 36, 0, "", 18);
+			accuracyTxt.scrollFactor.set();
+			accuracyTxt.setFormat("VCR OSD Mono", 18, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+			add(accuracyTxt);
+			accuracyTxt.cameras = [camHUD];
 		}
 		else
 		{
@@ -1176,12 +1185,30 @@ class PlayState extends MusicBeat
 		super.openSubState(SubState);
 	}
 
+	function truncateFloat(number:Float, precision:Int):Float
+	{
+		var num = number;
+		num = num * Math.pow(10, precision);
+		num = Math.round(num) / Math.pow(10, precision);
+		return num;
+	}
+
+	function updateAccuracy()
+	{
+		totalPlayed += 1;
+		accuracy = totalNotesHit / totalPlayed * 100;
+	}
+
 	override function update(elapsed:Float)
 	{
 		super.update(elapsed);
 		FlxG.camera.followLerp = CoolUtil.camLerpShit(0.04);
 
 		scoreTxt.text = "Score: " + songScore + " - Misses: " + songMisses;
+		if (FlxG.save.data.advanceDisplay)
+		{
+			accuracyTxt.text = "Accuracy: " + truncateFloat(accuracy, 2) + "% ";
+		}
 
 		if (startingSong)
 		{
@@ -1814,6 +1841,8 @@ class PlayState extends MusicBeat
 				case 3:
 					boyfriend.playAnim('singRIGHTmiss', true);
 			}
+
+			updateAccuracy();
 		}
 	}
 
@@ -1890,6 +1919,8 @@ class PlayState extends MusicBeat
 				notes.remove(note, true);
 				note.destroy();
 			}
+			totalNotesHit += 1;
+			updateAccuracy();
 		}
 	}
 

@@ -27,6 +27,9 @@ class MusicBeat extends FlxUIState
 		FlxG.stage.addEventListener(Event.ACTIVATE, function(_)
 		{
 			Lib.current.stage.frameRate = 120;
+			#if debug
+			flixel.addons.studio.FlxStudio.create();
+			#end
 		});
 	}
 
