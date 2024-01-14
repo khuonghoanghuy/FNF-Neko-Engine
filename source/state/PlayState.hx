@@ -112,6 +112,7 @@ class PlayState extends MusicBeat
 	private var totalPlayed:Int = 0;
 	var scoreTxt:FlxText;
 	var accuracyTxt:FlxText;
+	var daPopUp:String = "?";
 
 	public static var campaignScore:Int = 0;
 
@@ -580,8 +581,9 @@ class PlayState extends MusicBeat
 		{
 			scoreTxt = new FlxText(0, healthBarBG.y + 36, FlxG.width, "", 18);
 			scoreTxt.setFormat(Paths.font("vcr.ttf"), 18, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
-			accuracyTxt = new FlxText(5, healthBarBG.y + 36, 0, "", 18);
+			accuracyTxt = new FlxText(5, healthBarBG.y + 36, FlxG.width, "", 18);
 			accuracyTxt.scrollFactor.set();
+			accuracyTxt.x += scoreTxt.x + 100;
 			accuracyTxt.setFormat("VCR OSD Mono", 18, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 			add(accuracyTxt);
 			accuracyTxt.cameras = [camHUD];
@@ -638,12 +640,10 @@ class PlayState extends MusicBeat
 							});
 						});
 					});
-				case 'senpai':
+				case 'senpai' | 'thorns':
 					schoolIntro(doof);
 				case 'roses':
 					FlxG.sound.play(Paths.sound('ANGRY'));
-					schoolIntro(doof);
-				case 'thorns':
 					schoolIntro(doof);
 				default:
 					startCountdown();
@@ -1058,7 +1058,7 @@ class PlayState extends MusicBeat
 			{
 				babyArrow.y -= 10;
 				babyArrow.alpha = 0;
-				FlxTween.tween(babyArrow, {y: babyArrow.y + 10, alpha: 1}, 1, {ease: FlxEase.circOut, startDelay: 0.5 + (0.2 * i)});
+				FlxTween.tween(babyArrow, {y: babyArrow.y + 10, alpha: 1}, 1, {ease: FlxEase.cubeOut, startDelay: 0.5 + (0.2 * i)});
 			}
 
 			babyArrow.ID = i;
@@ -1209,7 +1209,7 @@ class PlayState extends MusicBeat
 		scoreTxt.text = "Score: " + songScore + " - Misses: " + songMisses;
 		if (FlxG.save.data.advanceDisplay)
 		{
-			accuracyTxt.text = "Accuracy: " + truncateFloat(accuracy, 2) + "% ";
+			accuracyTxt.text = "Accuracy: " + truncateFloat(accuracy, 2) + "%" + "\nRating as: " + daPopUp;
 		}
 
 		if (startingSong)
@@ -1678,22 +1678,23 @@ class PlayState extends MusicBeat
 
 		var daRating:String = "sick";
 
-		/*if (noteDiff > Conductor.safeZoneOffset * -2)
-			{
-				daRating = 'shit';
-				score = 50;
-			}
-			else if (noteDiff > Conductor.safeZoneOffset * 0.9)
-			{
-				daRating = 'bad';
-				score = 100;
-			}
-			else if (noteDiff > Conductor.safeZoneOffset * 0.75)
-			{
-				daRating = 'good';
-				score = 200;
-		}*/
+		if (noteDiff > Conductor.safeZoneOffset * 0.9)
+		{
+			daRating = 'shit';
+			score = 50;
+		}
+		else if (noteDiff > Conductor.safeZoneOffset * 0.75)
+		{
+			daRating = 'bad';
+			score = 100;
+		}
+		else if (noteDiff > Conductor.safeZoneOffset * 0.2)
+		{
+			daRating = 'good';
+			score = 200;
+		}
 
+		daPopUp = daRating;
 		songScore += score;
 
 		var pixelShitPart1:String = "gui/default/";
@@ -1710,6 +1711,7 @@ class PlayState extends MusicBeat
 		rating.x = coolText.x - 40;
 		rating.y -= 60;
 		rating.acceleration.y = 550;
+		rating.cameras = [camHUD];
 		rating.velocity.y -= FlxG.random.int(140, 175);
 		rating.velocity.x -= FlxG.random.int(0, 10);
 
@@ -1720,7 +1722,7 @@ class PlayState extends MusicBeat
 		comboSpr.velocity.y -= 150;
 		comboSpr.cameras = [camHUD];
 		comboSpr.velocity.x += FlxG.random.int(1, 10);
-		// add(rating);
+		add(rating);
 		add(comboSpr);
 
 		if (!curStage.startsWith('school'))
@@ -1773,7 +1775,7 @@ class PlayState extends MusicBeat
 			FlxTween.tween(numScore, {alpha: 0}, 0.2, {
 				onComplete: function(tween:FlxTween)
 				{
-					numScore.destroy();
+					numScore.kill();
 				},
 				startDelay: Conductor.crochet * 0.002
 			});
@@ -1795,10 +1797,10 @@ class PlayState extends MusicBeat
 		FlxTween.tween(comboSpr, {alpha: 0}, 0.2, {
 			onComplete: function(tween:FlxTween)
 			{
-				coolText.destroy();
-				comboSpr.destroy();
+				coolText.kill();
+				comboSpr.kill();
 
-				rating.destroy();
+				rating.kill();
 			},
 			startDelay: Conductor.crochet * 0.001
 		});
@@ -1883,7 +1885,7 @@ class PlayState extends MusicBeat
 		{
 			if (!note.isSustainNote)
 			{
-				popUpScore(note.noteData);
+				popUpScore(note.strumTime);
 				combo += 1;
 			}
 
