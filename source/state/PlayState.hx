@@ -151,6 +151,16 @@ class PlayState extends MusicBeat
 		if (SONG == null)
 			SONG = Song.loadFromJson('tutorial');
 
+		switch (SONG.song.toLowerCase())
+		{
+			case 'senpai':
+				dialogue = CoolUtil.coolTextFile(Paths.txt('senpai/senpaiDialogue'));
+			case 'roses':
+				dialogue = CoolUtil.coolTextFile(Paths.txt('roses/rosesDialogue'));
+			case 'thorns':
+				dialogue = CoolUtil.coolTextFile(Paths.txt('thorns/thornsDialogue'));
+		}
+
 		Conductor.mapBPMChanges(SONG);
 		Conductor.changeBPM(SONG.bpm);
 
