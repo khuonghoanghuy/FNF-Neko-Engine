@@ -243,7 +243,6 @@ class FreeplayState extends MusicBeat
 
 	function changeSelection(change:Int = 0)
 	{
-		// NGio.logEvent('Fresh');
 		FlxG.sound.play(Paths.sound('scrollMenu'), 0.4);
 
 		curSelected += change;

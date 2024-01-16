@@ -41,9 +41,9 @@ class MoreCounter extends TextField
 
 		if (visible)
 		{
-			text = "\nMemory: " + mem + " MB";
+			text = "\nMEM: " + mem + " MB";
 			#if debug
-			text += "\nMemory Peak: " + memPeak + " MB";
+			text += "\nMEM Peak: " + memPeak + " MB";
 			text += "\nPlatform Label: " + lime.system.System.platformLabel;
 			text += "\nPlatform Version: " + lime.system.System.platformVersion;
 			#end
