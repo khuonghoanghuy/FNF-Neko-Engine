@@ -25,6 +25,7 @@ import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
 import flixel.util.FlxTimer;
+import haxe.Http;
 import lime.app.Application;
 import openfl.Assets;
 

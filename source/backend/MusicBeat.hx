@@ -24,10 +24,10 @@ class MusicBeat extends FlxUIState
 		super.create();
 		FlxG.fixedTimestep = false;
 		openfl.system.System.gc();
-		FlxG.stage.addEventListener(Event.ACTIVATE, function(_)
-		{
-			Lib.current.stage.frameRate = 144;
-		});
+		if (FlxG.save.data.maxiumFPSCapper >= 0.01 && FlxG.save.data.maxiumFPSCapper <= 1000)
+			Lib.current.stage.frameRate = FlxG.save.data.maxiumFPSCapper;
+		else
+			Lib.current.stage.frameRate = 60; // or any other default value
 	}
 
 	override function update(elapsed:Float)

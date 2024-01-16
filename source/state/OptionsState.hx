@@ -18,6 +18,7 @@ import flixel.util.FlxColor;
 import lime.utils.Assets;
 import openfl.Lib;
 import openfl.events.Event;
+import subState.ResetDataSubState;
 
 class OptionsState extends MusicBeat
 {
@@ -27,7 +28,10 @@ class OptionsState extends MusicBeat
 	var controlsStrings:Array<String> = [
 		/*"Controls",*/ "Ghost tap",
 		"Downscroll",
-		"Advance Display" /*, "Maxium FPS Cap"*/];
+		"Advance Display",
+		"Maxium FPS Cap",
+		"Reset Data"
+	];
 
 	private var grpControls:FlxTypedGroup<Alphabet>;
 	var controlsStuff:String;
@@ -74,9 +78,11 @@ class OptionsState extends MusicBeat
 	override function update(elapsed:Float)
 	{
 		super.update(elapsed);
+		versionShit.text = controlsStuff;
 
 		if (controls.ACCEPT)
 		{
+			FlxG.sound.play(Paths.sound('scrollMenu'), 0.4);
 			switch (controlsStrings[curSelected])
 			{
 				case "Controls":
@@ -87,6 +93,8 @@ class OptionsState extends MusicBeat
 					FlxG.save.data.downscroll = !FlxG.save.data.downscroll;
 				case "Advance Display":
 					FlxG.save.data.advanceDisplay = !FlxG.save.data.advanceDisplay;
+				case "Reset Data":
+					openSubState(new ResetDataSubState());
 			}
 			FlxG.save.flush();
 			FlxG.save.bind('funkin', 'huy1234th');
@@ -98,8 +106,9 @@ class OptionsState extends MusicBeat
 			changeSelection(-1);
 		if (controls.DOWN_P)
 			changeSelection(1);
-		if (controls.LEFT)
+		if (controls.LEFT_R)
 		{
+			FlxG.sound.play(Paths.sound('scrollMenu'), 0.4);
 			switch (controlsStrings[curSelected])
 			{
 				case "Maxium FPS Cap":
@@ -109,26 +118,23 @@ class OptionsState extends MusicBeat
 					}
 					else
 					{
-						FlxG.save.data.maxiumFPSCapper -= 1;
+						FlxG.save.data.maxiumFPSCapper -= 10;
 					}
-					FlxG.stage.addEventListener(Event.ACTIVATE, function(_)
-					{
-						Lib.current.stage.frameRate = FlxG.save.data.maxiumFPSCapper;
-					});
+					controlsStuff = "Let FPS capping more FPS than ever (WARMING: THIS ONE IS GOT MUCH FPS MAY CAUSE CRASH GAME!!): "
+						+ FlxG.save.data.maxiumFPSCapper;
 			}
 			FlxG.save.flush();
 			FlxG.save.bind('funkin', 'huy1234th');
 		}
-		if (controls.RIGHT)
+		if (controls.RIGHT_R)
 		{
+			FlxG.sound.play(Paths.sound('scrollMenu'), 0.4);
 			switch (controlsStrings[curSelected])
 			{
 				case "Maxium FPS Cap":
-					FlxG.save.data.maxiumFPSCapper += 1;
-					FlxG.stage.addEventListener(Event.ACTIVATE, function(_)
-					{
-						Lib.current.stage.frameRate = FlxG.save.data.maxiumFPSCapper;
-					});
+					FlxG.save.data.maxiumFPSCapper += 10;
+					controlsStuff = "Let FPS capping more FPS than ever (WARMING: THIS ONE IS GOT MUCH FPS MAY CAUSE CRASH GAME!!): "
+						+ FlxG.save.data.maxiumFPSCapper;
 			}
 			FlxG.save.flush();
 			FlxG.save.bind('funkin', 'huy1234th');
@@ -146,13 +152,14 @@ class OptionsState extends MusicBeat
 			case "Controls":
 				controlsStuff = "Change the Keybind from keyboard (bro idk how to write this ;_;): ";
 			case "Ghost tap":
-				controlsStuff = "Help you play more easier than ever with ghost tap: ";
+				controlsStuff = "Help you play more easier than ever with ghost tap: " + (FlxG.save.data.ghosttap ? "ENABLE" : "DISABLE");
 			case "Downscroll":
-				controlsStuff = "If you can't play upscroll, downscroll will help you play much better: ";
-			case "Advande Display":
-				controlsStuff = "Display more stuff like Accuracy, Ranking and more: ";
+				controlsStuff = "If you can't play upscroll, downscroll will help you play much better: " + (FlxG.save.data.downscroll ? "ENABLE" : "DISABLE");
+			case "Advance Display":
+				controlsStuff = "Display more stuff like Accuracy, Ranking and more: " + (FlxG.save.data.advanceDisplay ? "ENABLE" : "DISABLE");
 			case "Maxium FPS Cap":
-				controlsStuff = "Let FPS capping more FPS than ever (WARMING: THIS ONE IS GOT MUCH FPS MAY CAUSE CRASH GAME!!): ";
+				controlsStuff = "Let FPS capping more FPS than ever (WARMING: THIS ONE IS GOT MUCH FPS MAY CAUSE CRASH GAME!!): "
+					+ FlxG.save.data.maxiumFPSCapper;
 		}
 
 		if (curSelected < 0)

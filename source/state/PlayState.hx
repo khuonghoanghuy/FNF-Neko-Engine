@@ -525,7 +525,7 @@ class PlayState extends MusicBeat
 		strumLine = new FlxSprite(0, 50).makeGraphic(FlxG.width, 10);
 		strumLine.scrollFactor.set();
 		if (FlxG.save.data.downscroll)
-			strumLine.y = FlxG.height - 165;
+			strumLine.y = FlxG.height - 150;
 		strumLineNotes = new FlxTypedGroup<FlxSprite>();
 		add(strumLineNotes);
 
@@ -577,21 +577,17 @@ class PlayState extends MusicBeat
 		iconP2.y = healthBar.y - (iconP2.height / 2);
 		add(iconP2);
 
+		scoreTxt = new FlxText(0, healthBarBG.y + 36, FlxG.width, "", 18);
+		scoreTxt.setFormat(Paths.font("vcr.ttf"), 18, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+
 		if (FlxG.save.data.advanceDisplay)
 		{
-			scoreTxt = new FlxText(0, healthBarBG.y + 36, FlxG.width, "", 18);
-			scoreTxt.setFormat(Paths.font("vcr.ttf"), 18, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
-			accuracyTxt = new FlxText(5, healthBarBG.y + 36, FlxG.width, "", 18);
+			accuracyTxt = new FlxText(5, healthBarBG.y + 33, FlxG.width, "", 18);
 			accuracyTxt.scrollFactor.set();
 			accuracyTxt.x += scoreTxt.x + 100;
 			accuracyTxt.setFormat("VCR OSD Mono", 18, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 			add(accuracyTxt);
 			accuracyTxt.cameras = [camHUD];
-		}
-		else
-		{
-			scoreTxt = new FlxText(healthBarBG.x + healthBarBG.width - 190, healthBarBG.y + 30, 0, "", 20);
-			scoreTxt.setFormat(Paths.font("vcr.ttf"), 20, FlxColor.WHITE, RIGHT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		}
 
 		scoreTxt.scrollFactor.set();
@@ -1204,7 +1200,7 @@ class PlayState extends MusicBeat
 	override function update(elapsed:Float)
 	{
 		super.update(elapsed);
-		FlxG.camera.followLerp = CoolUtil.camLerpShit(0.04);
+		FlxG.camera.followLerp = CoolUtil.camLerpShit(0.10);
 
 		scoreTxt.text = "Score: " + songScore + " - Misses: " + songMisses;
 		if (FlxG.save.data.advanceDisplay)
@@ -1568,7 +1564,7 @@ class PlayState extends MusicBeat
 			{
 				for (shit in 0...pressArray.length)
 				{ // if a direction is hit that shouldn't be
-					if (pressArray[shit] && !directionList.contains(shit))
+					if (pressArray[shit] && !directionList.contains(shit) && !FlxG.save.data.ghosttap)
 						noteMiss(shit);
 				}
 				for (coolNote in possibleNotes)
@@ -1580,7 +1576,7 @@ class PlayState extends MusicBeat
 			else
 			{
 				for (shit in 0...pressArray.length)
-					if (pressArray[shit])
+					if (pressArray[shit] && !FlxG.save.data.ghosttap)
 						noteMiss(shit);
 			}
 		}
@@ -1905,11 +1901,6 @@ class PlayState extends MusicBeat
 		if (FlxG.sound.music.time > Conductor.songPosition + 20 || FlxG.sound.music.time < Conductor.songPosition - 20)
 		{
 			resyncVocals();
-		}
-
-		if (dad.curCharacter == 'spooky' && curStep % 4 == 2)
-		{
-			// dad.dance();
 		}
 	}
 

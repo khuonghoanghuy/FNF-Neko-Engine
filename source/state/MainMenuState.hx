@@ -25,6 +25,8 @@ class MainMenuState extends MusicBeat
 
 	public static var curNekoEngineVersion:String = "0.1";
 
+	public static var warmOutdated:String; // should make a warm text!
+
 	var magenta:FlxSprite;
 	var camFollow:FlxObject;
 
@@ -68,7 +70,7 @@ class MainMenuState extends MusicBeat
 
 		for (i in 0...optionShit.length)
 		{
-			var menuItem:FlxSprite = new FlxSprite(0, 60 + (i * 160));
+			var menuItem:FlxSprite = new FlxSprite(0, 60 + (i * 144));
 			menuItem.frames = tex;
 			menuItem.animation.addByPrefix('idle', optionShit[i] + " basic", 24);
 			menuItem.animation.addByPrefix('selected', optionShit[i] + " white", 24);
@@ -85,6 +87,7 @@ class MainMenuState extends MusicBeat
 			- 22, 0,
 			"Neko Engine v"
 			+ curNekoEngineVersion
+			+ warmOutdated
 			+ " - FNF Engine v"
 			+ Application.current.meta.get('version'), 18);
 		versionShit.scrollFactor.set();
