@@ -30,6 +30,7 @@ class OptionsState extends MusicBeat
 		"Downscroll",
 		"Advance Display",
 		"Maxium FPS Cap",
+		"Camera Lerp",
 		"Reset Data"
 	];
 
@@ -89,10 +90,16 @@ class OptionsState extends MusicBeat
 					FlxG.switchState(new ControlsState());
 				case "Ghost tap":
 					FlxG.save.data.ghosttap = !FlxG.save.data.ghosttap;
+					updatetext();
 				case "Downscroll":
 					FlxG.save.data.downscroll = !FlxG.save.data.downscroll;
+					updatetext();
 				case "Advance Display":
 					FlxG.save.data.advanceDisplay = !FlxG.save.data.advanceDisplay;
+					updatetext();
+				case "Camera Lerp":
+					FlxG.save.data.camLerpPlayState = !FlxG.save.data.camLerpPlayState;
+					updatetext();
 				case "Reset Data":
 					openSubState(new ResetDataSubState());
 			}
@@ -120,8 +127,10 @@ class OptionsState extends MusicBeat
 					{
 						FlxG.save.data.maxiumFPSCapper -= 10;
 					}
-					controlsStuff = "Let FPS capping more FPS than ever (WARMING: THIS ONE IS GOT MUCH FPS MAY CAUSE CRASH GAME!!): "
-						+ FlxG.save.data.maxiumFPSCapper;
+					updateFPS();
+					updatetext();
+					/*controlsStuff = "Let FPS capping more FPS than ever (WARMING: THIS ONE IS GOT MUCH FPS MAY CAUSE CRASH GAME!!): "
+						+ FlxG.save.data.maxiumFPSCapper; */
 			}
 			FlxG.save.flush();
 			FlxG.save.bind('funkin', 'huy1234th');
@@ -133,20 +142,26 @@ class OptionsState extends MusicBeat
 			{
 				case "Maxium FPS Cap":
 					FlxG.save.data.maxiumFPSCapper += 10;
-					controlsStuff = "Let FPS capping more FPS than ever (WARMING: THIS ONE IS GOT MUCH FPS MAY CAUSE CRASH GAME!!): "
-						+ FlxG.save.data.maxiumFPSCapper;
+					updateFPS();
+					updatetext();
+					/*controlsStuff = "Let FPS capping more FPS than ever (WARMING: THIS ONE IS GOT MUCH FPS MAY CAUSE CRASH GAME!!): "
+						+ FlxG.save.data.maxiumFPSCapper; */
 			}
 			FlxG.save.flush();
 			FlxG.save.bind('funkin', 'huy1234th');
 		}
 	}
 
-	function changeSelection(change:Int = 0)
+	function updateFPS():Void
 	{
-		FlxG.sound.play(Paths.sound('scrollMenu'), 0.4);
+		if (FlxG.save.data.maxiumFPSCapper >= 0.01 && FlxG.save.data.maxiumFPSCapper <= 1000)
+			Lib.current.stage.frameRate = FlxG.save.data.maxiumFPSCapper;
+		else
+			Lib.current.stage.frameRate = 60; // or any other default value
+	}
 
-		curSelected += change;
-
+	function updatetext():Void
+	{
 		switch (controlsStrings[curSelected])
 		{
 			case "Controls":
@@ -160,7 +175,21 @@ class OptionsState extends MusicBeat
 			case "Maxium FPS Cap":
 				controlsStuff = "Let FPS capping more FPS than ever (WARMING: THIS ONE IS GOT MUCH FPS MAY CAUSE CRASH GAME!!): "
 					+ FlxG.save.data.maxiumFPSCapper;
+			case "Camera Lerp":
+				controlsStuff = "If the camera move too choppy and laggy on your device, turn this options as DISABLE: "
+					+ (FlxG.save.data.camLerpPlayState ? "ENABLE" : "DISABLE");
+			case "Reset Data":
+				controlsStuff = "This will reset all of your progress in game";
 		}
+	}
+
+	function changeSelection(change:Int = 0)
+	{
+		FlxG.sound.play(Paths.sound('scrollMenu'), 0.4);
+
+		curSelected += change;
+
+		updatetext();
 
 		if (curSelected < 0)
 			curSelected = grpControls.length - 1;

@@ -1200,7 +1200,10 @@ class PlayState extends MusicBeat
 	override function update(elapsed:Float)
 	{
 		super.update(elapsed);
-		FlxG.camera.followLerp = CoolUtil.camLerpShit(0.10);
+		if (FlxG.save.data.camLerpPlayState)
+		{
+			FlxG.camera.followLerp = CoolUtil.camLerpShit(0.10);
+		}
 
 		scoreTxt.text = "Score: " + songScore + " - Misses: " + songMisses;
 		if (FlxG.save.data.advanceDisplay)
