@@ -121,7 +121,7 @@ class DialogueBox extends FlxSpriteGroup
 		box.screenCenter(X);
 		portraitLeft.screenCenter(X);
 
-		handSelect = new FlxSprite(FlxG.width * 0.9, FlxG.height * 0.9).loadGraphic(Paths.image('weeb/pixelUI/hand_textbox'));
+		handSelect = new FlxSprite(FlxG.width * 0.9, FlxG.height * 0.9).loadGraphic(Paths.image('gui/pixel/hand_textbox'));
 		add(handSelect);
 
 		if (!talkingRight)
@@ -253,8 +253,17 @@ class DialogueBox extends FlxSpriteGroup
 
 	function cleanDialog():Void
 	{
-		var splitName:Array<String> = dialogueList[0].split(":");
-		curCharacter = splitName[1];
-		dialogueList[0] = dialogueList[0].substr(splitName[1].length + 2).trim();
+		if (dialogueList.length > 0)
+		{
+			var splitName:Array<String> = dialogueList[0].split(":");
+			if (splitName.length > 1 && splitName[1] != null)
+			{
+				curCharacter = splitName[1];
+				if (splitName[1].length + 2 <= dialogueList[0].length)
+				{
+					dialogueList[0] = dialogueList[0].substr(splitName[1].length + 2).trim();
+				}
+			}
+		}
 	}
 }
