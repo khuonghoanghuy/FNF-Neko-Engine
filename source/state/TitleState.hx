@@ -83,7 +83,7 @@ class TitleState extends MusicBeat
 	function checkversion()
 	{
 		// gotta check version online
-		var http = new haxe.Http("?");
+		var http = new haxe.Http("https://raw.githubusercontent.com/khuonghoanghuy/FNF-Neko-Engine/main/version.json");
 		http.onData = function(data:String)
 		{
 			try
