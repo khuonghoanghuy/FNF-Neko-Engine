@@ -1,4 +1,7 @@
 # FNF Neko Engine (WIP)
+
+![Repo Size](https://img.shields.io/github/repo-size/khuonghoanghuy/FNF-Neko-Engine)
+
 A Port of Friday Night Funkin' Port for `hl` target (like build for windows but more faster)
 
 This is a **WIP** mod, which means that it's not ready to be used yet
