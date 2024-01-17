@@ -19,6 +19,7 @@ import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
 import flixel.util.FlxTimer;
+import haxe.Json;
 import openfl.Assets;
 
 using StringTools;
@@ -50,7 +51,7 @@ class TitleState extends MusicBeat
 		FlxG.save.bind('funkin', 'huy1234th');
 		SaveData.saveInit();
 		// SaveData.swagData.loadconfig();
-
+		checkversion();
 		Highscore.load();
 
 		if (FlxG.save.data.weekUnlocked != null)
@@ -77,6 +78,48 @@ class TitleState extends MusicBeat
 			startIntro();
 		});
 		#end
+	}
+
+	function checkversion()
+	{
+		// gotta check version online
+		var http = new haxe.Http("?");
+		http.onData = function(data:String)
+		{
+			try
+			{
+				var json:Dynamic = Json.parse(data);
+				var version:String = json.version;
+				var doNeedCheck:Bool = json.needcheck;
+				var curVersion:String = MainMenuState.curNekoEngineVersion;
+				if (doNeedCheck == true)
+				{
+					if (version == "none")
+					{
+						trace("No update available");
+						return;
+					}
+					if (version != curVersion)
+					{
+						trace('outdated lmao! ' + version + ' != ' + curVersion);
+					}
+				}
+				else
+				{
+					trace('no need to check');
+				}
+			}
+			catch (ex)
+			{
+				trace("no config");
+				trace(ex);
+			}
+		};
+		http.onError = function(error)
+		{
+			trace('error');
+			trace(error);
+		}
 	}
 
 	var logoBl:FlxSprite;
