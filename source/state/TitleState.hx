@@ -21,6 +21,7 @@ import flixel.util.FlxColor;
 import flixel.util.FlxTimer;
 import haxe.Json;
 import openfl.Assets;
+import subState.OutdateSubState;
 
 using StringTools;
 
@@ -50,16 +51,10 @@ class TitleState extends MusicBeat
 
 		FlxG.save.bind('funkin', 'huy1234th');
 		SaveData.saveInit();
-		// SaveData.swagData.loadconfig();
-		checkversion();
 		Highscore.load();
 
 		if (FlxG.save.data.weekUnlocked != null)
 		{
-			// FIX LATER!!!
-			// WEEK UNLOCK PROGRESSION!!
-			// StoryMenuState.weekUnlocked = FlxG.save.data.weekUnlocked;
-
 			if (StoryMenuState.weekUnlocked.length < 4)
 				StoryMenuState.weekUnlocked.insert(0, true);
 
@@ -68,16 +63,10 @@ class TitleState extends MusicBeat
 				StoryMenuState.weekUnlocked[0] = true;
 		}
 
-		#if FREEPLAY
-		FlxG.switchState(new FreeplayState());
-		#elseif CHARTING
-		FlxG.switchState(new ChartingState());
-		#else
 		new FlxTimer().start(1, function(tmr:FlxTimer)
 		{
 			startIntro();
 		});
-		#end
 	}
 
 	function checkversion()
@@ -97,11 +86,12 @@ class TitleState extends MusicBeat
 					if (version == "none")
 					{
 						trace("No update available");
-						return;
+						FlxG.switchState(new MainMenuState());
 					}
 					if (version != curVersion)
 					{
 						trace('outdated lmao! ' + version + ' != ' + curVersion);
+						openSubState(new OutdateSubState());
 					}
 				}
 				else
@@ -289,7 +279,7 @@ class TitleState extends MusicBeat
 
 			new FlxTimer().start(2, function(tmr:FlxTimer)
 			{
-				FlxG.switchState(new MainMenuState());
+				checkversion();
 			});
 			// FlxG.sound.play(Paths.music('titleShoot'), 0.7);
 		}
