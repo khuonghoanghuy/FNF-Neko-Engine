@@ -3,6 +3,7 @@ package state;
 import backend.Conductor;
 import backend.CoolUtil;
 import backend.Highscore;
+import backend.HscriptCode;
 import backend.MusicBeat;
 import backend.SaveData;
 import backend.Section.SwagSection;
@@ -35,6 +36,7 @@ import object.HealthIcon;
 import object.Note;
 import subState.GameOverSubstate;
 import subState.PauseSubState;
+import sys.FileSystem;
 
 using StringTools;
 
@@ -49,42 +51,42 @@ class PlayState extends MusicBeat
 
 	var halloweenLevel:Bool = false;
 
-	private var vocals:FlxSound;
+	public var vocals:FlxSound;
 
-	private var dad:Character;
-	private var gf:Character;
-	private var boyfriend:Boyfriend;
+	public var dad:Character;
+	public var gf:Character;
+	public var boyfriend:Boyfriend;
 
-	private var notes:FlxTypedGroup<Note>;
-	private var unspawnNotes:Array<Note> = [];
+	public var notes:FlxTypedGroup<Note>;
+	public var unspawnNotes:Array<Note> = [];
 
-	private var strumLine:FlxSprite;
-	private var curSection:Int = 0;
+	public var strumLine:FlxSprite;
+	public var curSection:Int = 0;
 
-	private var camFollow:FlxObject;
+	public var camFollow:FlxObject;
 
-	private static var prevCamFollow:FlxObject;
+	public static var prevCamFollow:FlxObject;
 
-	private var strumLineNotes:FlxTypedGroup<FlxSprite>;
-	private var playerStrums:FlxTypedGroup<FlxSprite>;
+	public var strumLineNotes:FlxTypedGroup<FlxSprite>;
+	public var playerStrums:FlxTypedGroup<FlxSprite>;
 
-	private var camZooming:Bool = false;
-	private var curSong:String = "";
+	public var camZooming:Bool = false;
+	public var curSong:String = "";
 
-	private var gfSpeed:Int = 1;
-	private var health:Float = 1;
-	private var combo:Int = 0;
+	public var gfSpeed:Int = 1;
+	public var health:Float = 1;
+	public var combo:Int = 0;
 
-	private var healthBarBG:FlxSprite;
-	private var healthBar:FlxBar;
+	public var healthBarBG:FlxSprite;
+	public var healthBar:FlxBar;
 
-	private var generatedMusic:Bool = false;
-	private var startingSong:Bool = false;
+	public var generatedMusic:Bool = false;
+	public var startingSong:Bool = false;
 
-	private var iconP1:HealthIcon;
-	private var iconP2:HealthIcon;
-	private var camHUD:FlxCamera;
-	private var camGame:SwagCamera;
+	public var iconP1:HealthIcon;
+	public var iconP2:HealthIcon;
+	public var camHUD:FlxCamera;
+	public var camGame:SwagCamera;
 
 	var dialogue:Array<String> = ['blah blah blah', 'coolswag'];
 
@@ -106,18 +108,19 @@ class PlayState extends MusicBeat
 	var bgGirls:BackgroundGirls;
 
 	var talking:Bool = true;
-	var songScore:Int = 0;
-	var songMisses:Int = 0;
-	private var accuracy:Float = 0.00;
-	private var totalNotesHit:Float = 0;
-	private var totalPlayed:Int = 0;
-	var scoreTxt:FlxText;
-	var accuracyTxt:FlxText;
-	var daPopUp:String = "?";
+
+	public var songScore:Int = 0;
+	public var songMisses:Int = 0;
+	public var accuracy:Float = 0.00;
+	public var totalNotesHit:Float = 0;
+	public var totalPlayed:Int = 0;
+	public var scoreTxt:FlxText;
+	public var accuracyTxt:FlxText;
+	public var daPopUp:String = "?";
 
 	public static var campaignScore:Int = 0;
 
-	var defaultCamZoom:Float = 1.05;
+	public var defaultCamZoom:Float = 1.05;
 
 	// how big to stretch the pixel art assets
 	public static var daPixelZoom:Float = 6;
@@ -128,9 +131,26 @@ class PlayState extends MusicBeat
 	var startedCountdown:Bool = false;
 	var canPause:Bool = true;
 
+	public static var init:PlayState = null;
+
+	function getInitForHscript():Void
+	{
+		var initFile:String = SONG.song.toLowerCase() + "/script";
+		if (FileSystem.exists(Paths.txt(initFile)))
+		{
+			new HscriptCode(CoolUtil.coolStringFile(Paths.txt(initFile)));
+		}
+		else
+		{
+			trace("we dont have any call script.txt");
+		}
+	}
+
 	override function create()
 	{
 		super.create();
+		init = this;
+		getInitForHscript();
 		SaveData.getCurrentInit();
 		if (FlxG.sound.music != null)
 			FlxG.sound.music.stop();
