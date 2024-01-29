@@ -129,8 +129,6 @@ class OptionsState extends MusicBeat
 					}
 					updateFPS();
 					updatetext();
-					/*controlsStuff = "Let FPS capping more FPS than ever (WARMING: THIS ONE IS GOT MUCH FPS MAY CAUSE CRASH GAME!!): "
-						+ FlxG.save.data.maxiumFPSCapper; */
 			}
 			FlxG.save.flush();
 			FlxG.save.bind('funkin', 'huy1234th');
@@ -141,11 +139,17 @@ class OptionsState extends MusicBeat
 			switch (controlsStrings[curSelected])
 			{
 				case "Maxium FPS Cap":
-					FlxG.save.data.maxiumFPSCapper += 10;
+					if (FlxG.save.data.maxiumFPSCapper == Std.parseInt(CoolUtil.coolStringFile(Paths.txt("fpsMaxiumCap"))))
+					{
+						FlxG.save.data.maxiumFPSCapper += 0;
+					}
+					else
+					{
+						FlxG.save.data.maxiumFPSCapper += 10;
+					}
+
 					updateFPS();
 					updatetext();
-					/*controlsStuff = "Let FPS capping more FPS than ever (WARMING: THIS ONE IS GOT MUCH FPS MAY CAUSE CRASH GAME!!): "
-						+ FlxG.save.data.maxiumFPSCapper; */
 			}
 			FlxG.save.flush();
 			FlxG.save.bind('funkin', 'huy1234th');
@@ -154,7 +158,8 @@ class OptionsState extends MusicBeat
 
 	function updateFPS():Void
 	{
-		if (FlxG.save.data.maxiumFPSCapper >= 0.01 && FlxG.save.data.maxiumFPSCapper <= 1000)
+		if (FlxG.save.data.maxiumFPSCapper >= 0.01
+			&& FlxG.save.data.maxiumFPSCapper <= Std.parseInt(CoolUtil.coolStringFile(Paths.txt("fpsMaxiumCap"))))
 			Lib.current.stage.frameRate = FlxG.save.data.maxiumFPSCapper;
 		else
 			Lib.current.stage.frameRate = 60; // or any other default value

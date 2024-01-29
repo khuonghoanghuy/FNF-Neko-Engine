@@ -92,7 +92,6 @@ class DialogueBox extends FlxSpriteGroup
 			case 'roses':
 				hasDialog = true;
 				FlxG.sound.play(Paths.sound('ANGRY_TEXT_BOX'));
-
 				box.frames = Paths.getSparrowAtlas('gui/pixel/dialogueBox-senpaiMad');
 				box.animation.addByPrefix('normalOpen', 'SENPAI ANGRY IMPACT SPEECH', 24, false);
 				box.animation.addByIndices('normal', 'SENPAI ANGRY IMPACT SPEECH', [4], "", 24);
@@ -121,16 +120,11 @@ class DialogueBox extends FlxSpriteGroup
 		box.screenCenter(X);
 		portraitLeft.screenCenter(X);
 
-		handSelect = new FlxSprite(1042, 590).loadGraphic(Paths.image('weeb/pixelUI/hand_textbox'));
+		handSelect = new FlxSprite(1042, 590).loadGraphic(Paths.image('gui/pixel/hand_textbox'));
 		handSelect.setGraphicSize(Std.int(handSelect.width * PlayState.daPixelZoom * 0.9));
 		handSelect.updateHitbox();
 		handSelect.visible = false;
 		add(handSelect);
-
-		if (!talkingRight)
-		{
-			// box.flipX = true;
-		}
 
 		dropText = new FlxText(242, 502, Std.int(FlxG.width * 0.6), "", 32);
 		dropText.font = 'Pixel Arial 11 Bold';
@@ -166,11 +160,13 @@ class DialogueBox extends FlxSpriteGroup
 
 		dropText.text = swagDialogue.text;
 
-		if (box.animation.curAnim != null && box.animation.curAnim.name == 'normalOpen' && box.animation.curAnim.finished)
+		if (box.animation.curAnim != null)
 		{
 			box.animation.play('normal');
 			dialogueOpened = true;
 		}
+
+		if (box.animation.name == 'normalOpen' /* && box.animation.curAnim.finished */) {}
 
 		if (dialogueOpened && !dialogueStarted)
 		{
@@ -228,9 +224,14 @@ class DialogueBox extends FlxSpriteGroup
 	function startDialogue():Void
 	{
 		cleanDialog();
+		// var theDialog:Alphabet = new Alphabet(0, 70, dialogueList[0], false, true);
+		// dialogue = theDialog;
+		// add(theDialog);
+
+		// swagDialogue.text = ;
 		swagDialogue.resetText(dialogueList[0]);
 		swagDialogue.start(0.04);
-		swagDialogue.completeCallback = () ->
+		swagDialogue.completeCallback = function()
 		{
 			trace("dialogue finish");
 			handSelect.visible = true;
@@ -260,8 +261,8 @@ class DialogueBox extends FlxSpriteGroup
 
 	function cleanDialog():Void
 	{
-		var colonIndex = dialogueList[0].indexOf(":");
-		curCharacter = dialogueList[0].substring(colonIndex + 1).trim();
-		dialogueList[0] = dialogueList[0].substring(colonIndex + curCharacter.length + 2).trim();
+		var splitName:Array<String> = dialogueList[0].split(":");
+		curCharacter = splitName[1];
+		dialogueList[0] = dialogueList[0].substr(splitName[1].length + 2).trim();
 	}
 }

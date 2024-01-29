@@ -4,6 +4,7 @@ import backend.Conductor;
 import backend.CoolUtil;
 import backend.Highscore;
 import backend.MusicBeat;
+import backend.SaveData;
 import backend.Section.SwagSection;
 import backend.Song;
 import backend.SwagCamera;
@@ -130,7 +131,7 @@ class PlayState extends MusicBeat
 	override function create()
 	{
 		super.create();
-
+		SaveData.getCurrentInit();
 		if (FlxG.sound.music != null)
 			FlxG.sound.music.stop();
 
@@ -570,8 +571,7 @@ class PlayState extends MusicBeat
 		healthBarBG.scrollFactor.set();
 		add(healthBarBG);
 		if (FlxG.save.data.downscroll)
-			healthBarBG.y = 50;
-
+			healthBarBG.y = FlxG.height * 0.1;
 		healthBar = new FlxBar(healthBarBG.x + 4, healthBarBG.y + 4, RIGHT_TO_LEFT, Std.int(healthBarBG.width - 8), Std.int(healthBarBG.height - 8), this,
 			'health', 0, 2);
 		healthBar.scrollFactor.set();
@@ -1195,16 +1195,20 @@ class PlayState extends MusicBeat
 
 	function truncateFloat(number:Float, precision:Int):Float
 	{
-		var num = number;
-		num = num * Math.pow(10, precision);
-		num = Math.round(num) / Math.pow(10, precision);
-		return num;
+		return Math.floor(number * Math.pow(10, precision)) / Math.pow(10, precision);
 	}
 
 	function updateAccuracy()
 	{
-		totalPlayed += 1;
+		totalPlayed++;
 		accuracy = totalNotesHit / totalPlayed * 100;
+	}
+
+	function updateIconScale(icon:FlxSprite, elapsed:Float)
+	{
+		var mult:Float = FlxMath.lerp(1, icon.scale.x, CoolUtil.boundTo(1 - (elapsed * 9), 0, 1));
+		icon.scale.set(mult, mult);
+		icon.updateHitbox();
 	}
 
 	override function update(elapsed:Float)
@@ -1343,21 +1347,15 @@ class PlayState extends MusicBeat
 			}
 		}
 
-		var mult:Float = FlxMath.lerp(1, iconP1.scale.x, CoolUtil.boundTo(1 - (elapsed * 9), 0, 1));
-		iconP1.scale.set(mult, mult);
-		iconP1.updateHitbox();
-
-		var mult:Float = FlxMath.lerp(1, iconP2.scale.x, CoolUtil.boundTo(1 - (elapsed * 9), 0, 1));
-		iconP2.scale.set(mult, mult);
-		iconP2.updateHitbox();
+		updateIconScale(iconP1, elapsed);
+		updateIconScale(iconP2, elapsed);
 
 		var iconOffset:Int = 26;
 
 		iconP1.x = healthBar.x + (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 100, 0) * 0.01) - iconOffset);
 		iconP2.x = healthBar.x + (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 100, 0) * 0.01)) - (iconP2.width - iconOffset);
 
-		if (health > 2)
-			health = 2;
+		health = Math.min(health, 2.023);
 
 		if (healthBar.percent < 20)
 			iconP1.animation.curAnim.curFrame = 1;
@@ -1379,7 +1377,9 @@ class PlayState extends MusicBeat
 		{
 			notes.forEachAlive(function(daNote:Note)
 			{
-				if ((FlxG.save.data.dowscroll && daNote.y < -daNote.height) || (!FlxG.save.data.dowscroll && daNote.y > FlxG.height))
+				var scrollDown = FlxG.save.data.dowscroll;
+
+				if ((scrollDown && daNote.y < -daNote.height) || (!scrollDown && daNote.y > FlxG.height))
 				{
 					daNote.active = false;
 					daNote.visible = false;
@@ -1392,7 +1392,7 @@ class PlayState extends MusicBeat
 
 				var strumLineMid = strumLine.y + Note.swagWidth / 2;
 
-				if (FlxG.save.data.dowscroll)
+				if (scrollDown)
 				{
 					daNote.y = (strumLine.y + (Conductor.songPosition - daNote.strumTime) * (0.45 * FlxMath.roundDecimal(SONG.speed, 2)));
 
@@ -1465,16 +1465,15 @@ class PlayState extends MusicBeat
 					notes.remove(daNote, true);
 					daNote.destroy();
 				}
+
 				if (FlxG.save.data.downscroll)
 					daNote.y = (strumLine.y - (Conductor.songPosition - daNote.strumTime) * (-0.45 * FlxMath.roundDecimal(SONG.speed, 2)));
 				else
 					daNote.y = (strumLine.y - (Conductor.songPosition - daNote.strumTime) * (0.45 * FlxMath.roundDecimal(SONG.speed, 2)));
-				// WIP interpolation shit? Need to fix the pause issue
-				// daNote.y = (strumLine.y - (songTime - daNote.strumTime) * (0.45 * PlayState.SONG.speed));
 
 				if (daNote.isSustainNote && daNote.wasGoodHit)
 				{
-					if ((!FlxG.save.data.dowscroll && daNote.y < -daNote.height) || (FlxG.save.data.dowscroll && daNote.y > FlxG.height))
+					if ((!scrollDown && daNote.y < -daNote.height) || (scrollDown && daNote.y > FlxG.height))
 					{
 						daNote.active = false;
 						daNote.visible = false;
@@ -1620,6 +1619,8 @@ class PlayState extends MusicBeat
 		});
 	}
 
+	var tryColor:Int;
+
 	private function popUpScore(strumtime:Float):Void
 	{
 		var noteDiff:Float = Math.abs(strumtime - Conductor.songPosition);
@@ -1640,19 +1641,27 @@ class PlayState extends MusicBeat
 		{
 			daRating = 'shit';
 			score = 50;
+			tryColor = FlxColor.GRAY;
 		}
 		else if (noteDiff > Conductor.safeZoneOffset * 0.75)
 		{
 			daRating = 'bad';
 			score = 100;
+			tryColor = FlxColor.BROWN;
 		}
 		else if (noteDiff > Conductor.safeZoneOffset * 0.2)
 		{
 			daRating = 'good';
 			score = 200;
+			tryColor = FlxColor.YELLOW;
+		}
+		if (daRating == "sick")
+		{
+			tryColor = FlxColor.GREEN;
 		}
 
-		daPopUp = daRating;
+		daPopUp = daRating.toUpperCase();
+		accuracyTxt.color = tryColor;
 		songScore += score;
 
 		var pixelShitPart1:String = "gui/default/";
@@ -1759,11 +1768,25 @@ class PlayState extends MusicBeat
 				comboSpr.kill();
 
 				rating.kill();
+				// doTweenTxt(accuracyTxt, tryColor, FlxColor.WHITE);
 			},
 			startDelay: Conductor.crochet * 0.001
 		});
 
 		curSection += 1;
+	}
+
+	function doTweenTxt(text:FlxText, color1:Int, color2:Int)
+	{
+		return FlxTween.color(text, 1.2, color1, color2, {
+			ease: FlxEase.linear,
+			onComplete: doColorBack
+		});
+	}
+
+	function doColorBack(_):Void
+	{
+		tryColor = FlxColor.WHITE;
 	}
 
 	function noteMiss(direction:Int = 1):Void
@@ -1779,6 +1802,7 @@ class PlayState extends MusicBeat
 
 			songScore -= 10;
 			songMisses++;
+			totalNotesHit -= 1;
 
 			FlxG.sound.play(Paths.soundRandom('missnote', 1, 3), FlxG.random.float(0.1, 0.2));
 			// FlxG.sound.play(Paths.sound('missnote1'), 1, false);
@@ -1883,6 +1907,7 @@ class PlayState extends MusicBeat
 			}
 			totalNotesHit += 1;
 			updateAccuracy();
+			trace(health);
 		}
 	}
 
@@ -1963,11 +1988,6 @@ class PlayState extends MusicBeat
 				Conductor.changeBPM(SONG.notes[Math.floor(curStep / 16)].bpm);
 				FlxG.log.add('CHANGED BPM!');
 			}
-			// Dad doesnt interupt his own notes
-			if (SONG.notes[Math.floor(curStep / 16)].mustHitSection)
-				dad.dance();
-			else // woah
-				dad.dance();
 		}
 
 		iconP1.setGraphicSize(Std.int(iconP1.width + 25));
@@ -1992,6 +2012,11 @@ class PlayState extends MusicBeat
 		if (curBeat % gfSpeed == 0)
 		{
 			gf.dance();
+		}
+
+		if (!dad.animation.curAnim.name.startsWith("sing"))
+		{
+			dad.dance();
 		}
 
 		if (!boyfriend.animation.curAnim.name.startsWith("sing"))

@@ -32,4 +32,32 @@ class SaveData
 		FlxG.save.destroy();
 		FlxG.save.erase();
 	}
+
+	public static function getCurrentInit()
+	{
+		if (FlxG.save.data.ghosttap != null)
+		{
+			FlxG.save.data.ghosttap = FlxG.save.data.ghosttap;
+		}
+
+		if (FlxG.save.data.downscroll != null)
+		{
+			FlxG.save.data.downscroll = FlxG.save.data.downscroll;
+		}
+
+		if (FlxG.save.data.advanceDisplay != null)
+		{
+			FlxG.save.data.advanceDisplay = FlxG.save.data.advanceDisplay;
+		}
+
+		if (FlxG.save.data.maxiumFPSCapper != null)
+		{
+			FlxG.save.data.maxiumFPSCapper = FlxG.save.data.maxiumFPSCapper;
+		}
+
+		if (FlxG.save.data.camLerpPlayState != null)
+		{
+			FlxG.save.data.camLerpPlayState = FlxG.save.data.camLerpPlayState;
+		}
+	}
 }

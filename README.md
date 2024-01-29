@@ -15,6 +15,6 @@ Also, if you gonna use this engine, dont worry about your disk, dont need to hav
 - If u don't like the choppy laggy camlerp on PlayState when play a song, find `FlxG.camera.followLerp = CoolUtil.camLerpShit(0.04);` and comment this code like `// FlxG.camera.followLerp = CoolUtil.camLerpShit(0.04);` (also is an options too!)
 # Some issues still in Neko Engine:
 - Uncaught exeption `max_string_size reached` (not fixed yet, build on `hl` will not get that error) (also it from `neko` target too)
-- dialogue cannot be played
+- dialogue can be played but the .finished is make game  crash if you press enter while dialogue playing
 # Some info:
 I really need help ;_;

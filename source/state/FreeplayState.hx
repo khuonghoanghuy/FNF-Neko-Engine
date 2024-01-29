@@ -118,9 +118,6 @@ class FreeplayState extends MusicBeat
 
 		selector.size = 40;
 		selector.text = ">";
-		// add(selector);
-
-		var swag:Alphabet = new Alphabet(1, 0, "swag");
 
 		// JUST DOIN THIS SHIT FOR TESTING!!!
 		/* 
@@ -256,12 +253,9 @@ class FreeplayState extends MusicBeat
 
 		#if !switch
 		intendedScore = Highscore.getScore(songs[curSelected].songName, curDifficulty);
-		// lerpScore = 0;
 		#end
 
-		#if PRELOAD_ALL
 		FlxG.sound.playMusic(Paths.inst(songs[curSelected].songName), 0);
-		#end
 
 		var bullShit:Int = 0;
 
