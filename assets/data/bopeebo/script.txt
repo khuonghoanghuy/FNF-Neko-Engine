@@ -1,1 +1,0 @@
-FlxG.resizeGame(800, 600);

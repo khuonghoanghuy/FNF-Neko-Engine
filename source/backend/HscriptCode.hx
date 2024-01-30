@@ -1,6 +1,9 @@
 package backend;
 
+import flixel.FlxCamera;
 import flixel.FlxG;
+import flixel.FlxSprite;
+import flixel.util.FlxColor;
 import object.Boyfriend;
 import object.Character;
 import state.PlayState;
@@ -18,6 +21,14 @@ class HscriptCode
 		interp.variables.set("Math", Math);
 		interp.variables.set("FlxG", FlxG);
 		interp.variables.set("PlayState", PlayState.init);
+		// interp.variables.set("FlxColor", FlxColor);
+		interp.variables.set("FlxSprite", FlxSprite);
+		interp.variables.set('FlxCamera', FlxCamera);
+		interp.variables.set("Paths", Paths);
+		interp.variables.set('setVar', function(name:String, value:Dynamic)
+		{
+			PlayState.init.variables.set(name, value);
+		});
 		interp.variables.set("ChangeEvent", function(typeEvent:String, value1:String, value2:String, value3:String)
 		{
 			switch (typeEvent)
@@ -32,6 +43,8 @@ class HscriptCode
 					PlayState.init.add(PlayState.init.boyfriend);
 			}
 		});
+		interp.variables.set("RunEvent", PlayState.runEvent);
+		interp.variables.set("MakeBG", PlayState.makeBG);
 
 		trace(interp.execute(program));
 		interp.execute(program);

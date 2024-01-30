@@ -34,6 +34,7 @@
 
 	<!-- _______________________________ Libraries ______________________________ -->
 
+	<haxelib name="hscript" />
 	<haxelib name="flixel" />
 
 	<!--In case you want to use the addons package-->

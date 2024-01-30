@@ -9,12 +9,12 @@ import openfl.events.Event;
 
 class MusicBeat extends FlxUIState
 {
-	private var lastBeat:Float = 0;
-	private var lastStep:Float = 0;
+	public var lastBeat:Float = 0;
+	public var lastStep:Float = 0;
 
-	private var curStep:Int = 0;
-	private var curBeat:Int = 0;
-	private var controls(get, never):Controls;
+	public var curStep:Int = 0;
+	public var curBeat:Int = 0;
+	public var controls(get, never):Controls;
 
 	inline function get_controls():Controls
 		return PlayerSettings.player1.controls;
@@ -22,6 +22,10 @@ class MusicBeat extends FlxUIState
 	override function create()
 	{
 		super.create();
+		lastBeat = 0;
+		lastStep = 0;
+		curStep = 0;
+		curBeat = 0;
 		FlxG.fixedTimestep = false;
 		openfl.system.System.gc();
 		if (FlxG.save.data.maxiumFPSCapper >= 0.01

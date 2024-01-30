@@ -235,7 +235,7 @@ class TitleState extends MusicBeat
 	{
 		if (FlxG.sound.music != null)
 			Conductor.songPosition = FlxG.sound.music.time;
-		// Watch.addQuick('amp', FlxG.sound.music.amplitude);
+		// FlxG.watch.addQuick('amp', FlxG.sound.music.amplitude);
 
 		if (FlxG.keys.justPressed.F)
 		{

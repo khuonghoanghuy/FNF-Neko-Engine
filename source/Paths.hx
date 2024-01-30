@@ -49,7 +49,7 @@ class Paths
 		return if (library == "preload" || library == "default") getPreloadPath(file); else getLibraryPathForce(file, library);
 	}
 
-	inline static function getLibraryPathForce(file:String, library:String)
+	inline static public function getLibraryPathForce(file:String, library:String)
 	{
 		FlxG.stage.addEventListener(Event.ACTIVATE, function(_)
 		{
@@ -59,7 +59,7 @@ class Paths
 		return '$library:assets/$library/$file';
 	}
 
-	inline static function getPreloadPath(file:String)
+	inline static public function getPreloadPath(file:String)
 	{
 		FlxG.stage.addEventListener(Event.ACTIVATE, function(_)
 		{

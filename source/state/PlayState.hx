@@ -27,6 +27,7 @@ import flixel.ui.FlxBar;
 import flixel.util.FlxColor;
 import flixel.util.FlxSort;
 import flixel.util.FlxTimer;
+import lime.utils.Log;
 import object.BackgroundDancer;
 import object.BackgroundGirls;
 import object.Boyfriend;
@@ -42,7 +43,8 @@ using StringTools;
 
 class PlayState extends MusicBeat
 {
-	public static var curStage:String = '';
+	public var curStage:String = '';
+
 	public static var SONG:SwagSong;
 	public static var isStoryMode:Bool = false;
 	public static var storyWeek:Int = 0;
@@ -118,6 +120,12 @@ class PlayState extends MusicBeat
 	public var accuracyTxt:FlxText;
 	public var daPopUp:String = "?";
 
+	#if (haxe >= "4.0.0")
+	public var variables:Map<String, Dynamic> = new Map();
+	#else
+	public var variables:Map<String, Dynamic> = new Map<String, Dynamic>();
+	#end
+
 	public static var campaignScore:Int = 0;
 
 	public var defaultCamZoom:Float = 1.05;
@@ -138,11 +146,48 @@ class PlayState extends MusicBeat
 		var initFile:String = SONG.song.toLowerCase() + "/script";
 		if (FileSystem.exists(Paths.txt(initFile)))
 		{
-			new HscriptCode(CoolUtil.coolStringFile(Paths.txt(initFile)));
+			try
+			{
+				new HscriptCode(CoolUtil.coolStringFile(Paths.txt(initFile)));
+			}
+			catch (e:Dynamic)
+			{
+				// Log.error("Error loading or parsing Haxe script file: " + Paths.txt(initFile));
+				lime.app.Application.current.window.alert("Error loading script:\n" + e);
+			}
 		}
 		else
 		{
 			trace("we dont have any call script.txt");
+		}
+	}
+
+	public static function makeBG(paths:String, xPos:Float, yPos:Float, scale:Float, flipx:Bool = false, flipy:Bool = false, scrollFactorX:Float = 1,
+			scrollFactorY:Float = 1)
+	{
+		var aBg:FlxSprite = new FlxSprite(xPos, yPos, Paths.image(paths));
+		aBg.scale.set(scale, scale);
+		aBg.flipX = flipx;
+		aBg.flipY = flipy;
+		aBg.scrollFactor.set(scrollFactorX, scrollFactorY);
+		init.add(aBg);
+	}
+
+	public static function runEvent(typeEvent:String, atbeat:Int, value1:Dynamic, value2:Dynamic):Void
+	{
+		if (init.curBeat == atbeat)
+		{
+			switch (typeEvent)
+			{
+				case "changeDadChar":
+					PlayState.init.remove(PlayState.init.dad);
+					PlayState.init.dad = new Character(100, 100, value1, false);
+					PlayState.init.add(PlayState.init.dad);
+				case "changeBfChar":
+					PlayState.init.remove(PlayState.init.boyfriend);
+					PlayState.init.boyfriend = new Boyfriend(740, 100, value1);
+					PlayState.init.add(PlayState.init.boyfriend);
+			}
 		}
 	}
 
@@ -421,29 +466,17 @@ class PlayState extends MusicBeat
 				bg.scale.set(6, 6);
 				add(bg);
 			default:
-				defaultCamZoom = 0.9;
-				curStage = 'stage';
-				var bg:FlxSprite = new FlxSprite(-600, -200).loadGraphic(Paths.image('stages/stage/stageback'));
-				bg.antialiasing = true;
-				bg.scrollFactor.set(0.9, 0.9);
-				bg.active = false;
-				add(bg);
-
-				var stageFront:FlxSprite = new FlxSprite(-650, 600).loadGraphic(Paths.image('stages/stage/stagefront'));
-				stageFront.setGraphicSize(Std.int(stageFront.width * 1.1));
-				stageFront.updateHitbox();
-				stageFront.antialiasing = true;
-				stageFront.scrollFactor.set(0.9, 0.9);
-				stageFront.active = false;
-				add(stageFront);
-
-				var stageCurtains:FlxSprite = new FlxSprite(-500, -300).loadGraphic(Paths.image('stages/stage/stagecurtains'));
-				stageCurtains.setGraphicSize(Std.int(stageCurtains.width * 0.9));
-				stageCurtains.updateHitbox();
-				stageCurtains.antialiasing = true;
-				stageCurtains.scrollFactor.set(1.3, 1.3);
-				stageCurtains.active = false;
-				add(stageCurtains);
+				// using stage.txt for hscript to make as a stage
+				try
+				{
+					var path:String = Paths.file("stage/stage.txt");
+					new HscriptCode(CoolUtil.coolStringFile(path));
+				}
+				catch (e:Dynamic)
+				{
+					trace("Error loading stage:\n" + e);
+					lime.app.Application.current.window.alert("Error loading stage:\n" + e, "Error Loading Stage!");
+				}
 		}
 
 		var gfVersion:String = 'gf';
@@ -583,9 +616,6 @@ class PlayState extends MusicBeat
 		FlxG.worldBounds.set(0, 0, FlxG.width, FlxG.height);
 
 		FlxG.fixedTimestep = false;
-		Profile.newTracker(FlxText, ["x", "y"], [FlxObject]);
-		Profile.newTracker(FlxSprite, ["frameWidth", "frameHeight", "alpha", "origin", "offset", "scale"], [FlxObject]);
-
 		healthBarBG = new FlxSprite(0, FlxG.height * 0.9).loadGraphic(Paths.image('gui/default/healthBar'));
 		healthBarBG.screenCenter(X);
 		healthBarBG.scrollFactor.set();
