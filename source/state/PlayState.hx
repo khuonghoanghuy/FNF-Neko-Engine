@@ -126,6 +126,8 @@ class PlayState extends MusicBeat
 	public var variables:Map<String, Dynamic> = new Map<String, Dynamic>();
 	#end
 
+	public static var coolBgAnimatedPlayed:Array<String> = [""];
+
 	public static var campaignScore:Int = 0;
 
 	public var defaultCamZoom:Float = 1.05;
@@ -170,6 +172,22 @@ class PlayState extends MusicBeat
 		aBg.flipX = flipx;
 		aBg.flipY = flipy;
 		aBg.scrollFactor.set(scrollFactorX, scrollFactorY);
+		init.add(aBg);
+	}
+
+	// test
+	public static function makeAnimateBG(paths:String, xPos:Float, yPos:Float, scale:Float, flipx:Bool = false, flipy:Bool = false, scrollFactorX:Float = 1,
+			scrollFactorY:Float = 1, animationName:String, animationPrefix:String)
+	{
+		var aBg:FlxSprite = new FlxSprite(xPos, yPos);
+		aBg.scale.set(scale, scale);
+		aBg.flipX = flipx;
+		aBg.flipY = flipy;
+		aBg.scrollFactor.set(scrollFactorX, scrollFactorY);
+		aBg.frames = Paths.getSparrowAtlas(paths);
+		aBg.animation.addByPrefix(animationName, animationPrefix, 24, false);
+		aBg.animation.play(animationName);
+		coolBgAnimatedPlayed.push(animationName);
 		init.add(aBg);
 	}
 
@@ -233,20 +251,16 @@ class PlayState extends MusicBeat
 		switch (SONG.song.toLowerCase())
 		{
 			case 'spookeez' | 'monster' | 'south':
-				curStage = 'spooky';
-				halloweenLevel = true;
-
-				var hallowTex = Paths.getSparrowAtlas('stages/spooky/halloween_bg');
-
-				halloweenBG = new FlxSprite(-200, -100);
-				halloweenBG.frames = hallowTex;
-				halloweenBG.animation.addByPrefix('idle', 'halloweem bg0');
-				halloweenBG.animation.addByPrefix('lightning', 'halloweem bg lightning strike', 24, false);
-				halloweenBG.animation.play('idle');
-				halloweenBG.antialiasing = true;
-				add(halloweenBG);
-
-				isHalloween = true;
+				try
+				{
+					var path:String = Paths.file("stage/spooky.txt");
+					new HscriptCode(CoolUtil.coolStringFile(path));
+				}
+				catch (e:Dynamic)
+				{
+					trace("Error loading stage:\n" + e);
+					lime.app.Application.current.window.alert("Error loading stage:\n" + e, "Error Loading Stage!");
+				}
 			case 'pico' | 'blammed' | 'philly':
 				curStage = 'philly';
 

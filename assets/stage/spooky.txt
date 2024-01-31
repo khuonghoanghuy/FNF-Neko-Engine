@@ -1,0 +1,3 @@
+PlayState.curStage = 'spooky';
+
+MakeAnimateBG('stages/spooky/halloween_bg', -200, -100, 1, false, false, 1, 1, 'idle', 'halloweem bg0');

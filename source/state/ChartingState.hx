@@ -3,6 +3,7 @@ package state;
 import backend.Conductor;
 import backend.CoolUtil;
 import backend.MusicBeat;
+import backend.SaveData;
 import backend.Section.SwagSection;
 import backend.Song;
 import flixel.FlxG;
@@ -541,6 +542,7 @@ class ChartingState extends MusicBeat
 			PlayState.SONG = _song;
 			FlxG.sound.music.stop();
 			vocals.stop();
+			SaveData.getCurrentInit();
 			FlxG.switchState(new PlayState());
 		}
 

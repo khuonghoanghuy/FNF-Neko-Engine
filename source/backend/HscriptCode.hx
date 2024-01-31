@@ -45,6 +45,9 @@ class HscriptCode
 		});
 		interp.variables.set("RunEvent", PlayState.runEvent);
 		interp.variables.set("MakeBG", PlayState.makeBG);
+		interp.variables.set("MakeAnimateBG", PlayState.makeAnimateBG);
+		interp.variables.set("WorkOnBeatHit", PlayState.init.beatHit);
+		interp.variables.set("WorkOnStepHit", PlayState.init.stepHit);
 
 		trace(interp.execute(program));
 		interp.execute(program);
