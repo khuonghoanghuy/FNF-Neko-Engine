@@ -542,7 +542,7 @@ class ChartingState extends MusicBeat
 			PlayState.SONG = _song;
 			FlxG.sound.music.stop();
 			vocals.stop();
-			SaveData.getCurrentInit();
+			SaveData.getSaveData();
 			FlxG.switchState(new PlayState());
 		}
 

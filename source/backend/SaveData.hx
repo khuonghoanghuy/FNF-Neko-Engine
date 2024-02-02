@@ -1,63 +1,57 @@
 package backend;
 
-import flixel.FlxG;
+import haxe.ds.StringMap;
 
 class SaveData
 {
+	public static var saveData:StringMap<Dynamic> = new StringMap<Dynamic>();
+
+	public static function main()
+	{
+		saveInit();
+		trace(saveData.get("ghosttap")); // Output: true
+		trace(saveData.get("downscroll")); // Output: false
+		trace(saveData.get("advanceDisplay")); // Output: true
+		trace(saveData.get("maxiumFPSCapper")); // Output: 60
+		trace(saveData.get("camLerpPlayState")); // Output: true
+
+		var saveDataCopy = getSaveData();
+		trace(saveDataCopy.get("ghosttap")); // Output: true
+		trace(saveDataCopy.get("downscroll")); // Output: false
+		trace(saveDataCopy.get("advanceDisplay")); // Output: true
+		trace(saveDataCopy.get("maxiumFPSCapper")); // Output: 60
+		trace(saveDataCopy.get("camLerpPlayState")); // Output: true
+	}
+
 	public static function saveInit()
 	{
-		if (FlxG.save.data.ghosttap == null)
-			FlxG.save.data.ghosttap = true;
+		if (!saveData.exists("ghosttap"))
+			saveData.set("ghosttap", true);
 
-		if (FlxG.save.data.downscroll == null)
-			FlxG.save.data.downscroll = false;
+		if (!saveData.exists("downscroll"))
+			saveData.set("downscroll", false);
 
-		if (FlxG.save.data.advanceDisplay == null)
-			FlxG.save.data.advanceDisplay = true;
+		if (!saveData.exists("advanceDisplay"))
+			saveData.set("advanceDisplay", true);
 
-		if (FlxG.save.data.maxiumFPSCapper == null)
-			FlxG.save.data.maxiumFPSCapper = 60;
+		if (!saveData.exists("maxiumFPSCapper"))
+			saveData.set("maxiumFPSCapper", 60);
 
-		if (FlxG.save.data.camLerpPlayState == null)
-			FlxG.save.data.camLerpPlayState = true;
+		if (!saveData.exists("camLerpPlayState"))
+			saveData.set("camLerpPlayState", true);
 	}
 
-	public static function resetInit()
+	public static function resetData()
 	{
-		FlxG.save.data.ghosttap = null;
-		FlxG.save.data.downscroll = null;
-		FlxG.save.data.advanceDisplay = null;
-		FlxG.save.data.maxiumFPSCapper = null;
-		FlxG.save.data.songScores = 0;
-		FlxG.save.destroy();
-		FlxG.save.erase();
+		saveData.set("ghosttap", true);
+		saveData.set("downscroll", false);
+		saveData.set("advanceDisplay", true);
+		saveData.set("maxiumFPSCapper", 60);
+		saveData.set("camLerpPlayState", true);
 	}
 
-	public static function getCurrentInit()
+	public static function getSaveData():StringMap<Dynamic>
 	{
-		if (FlxG.save.data.ghosttap != null)
-		{
-			FlxG.save.data.ghosttap = FlxG.save.data.ghosttap;
-		}
-
-		if (FlxG.save.data.downscroll != null)
-		{
-			FlxG.save.data.downscroll = FlxG.save.data.downscroll;
-		}
-
-		if (FlxG.save.data.advanceDisplay != null)
-		{
-			FlxG.save.data.advanceDisplay = FlxG.save.data.advanceDisplay;
-		}
-
-		if (FlxG.save.data.maxiumFPSCapper != null)
-		{
-			FlxG.save.data.maxiumFPSCapper = FlxG.save.data.maxiumFPSCapper;
-		}
-
-		if (FlxG.save.data.camLerpPlayState != null)
-		{
-			FlxG.save.data.camLerpPlayState = FlxG.save.data.camLerpPlayState;
-		}
+		return saveData.copy();
 	}
 }

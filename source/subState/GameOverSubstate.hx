@@ -4,10 +4,6 @@ import backend.Conductor;
 import backend.MusicBeatSub;
 import flixel.FlxG;
 import flixel.FlxObject;
-import flixel.addons.display.FlxBackdrop;
-import flixel.addons.display.FlxGridOverlay;
-import flixel.tweens.FlxEase;
-import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
 import flixel.util.FlxTimer;
 import object.Boyfriend;
@@ -25,11 +21,6 @@ class GameOverSubstate extends MusicBeatSub
 
 	public function new(x:Float, y:Float)
 	{
-		var grid:FlxBackdrop = new FlxBackdrop(FlxGridOverlay.createGrid(80, 80, 160, 160, true, 0x33FFFFFF, 0x0));
-		grid.velocity.set(40, 40);
-		grid.alpha = 0;
-		FlxTween.tween(grid, {alpha: 1}, 0.5, {ease: FlxEase.backOut});
-		add(grid);
 		FlxG.camera.flash(FlxColor.RED, 1);
 		var daStage = PlayState.init.curStage;
 		var daBf:String = '';

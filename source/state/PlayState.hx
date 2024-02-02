@@ -143,24 +143,35 @@ class PlayState extends MusicBeat
 
 	public static var init:PlayState = null;
 
+	// todo: make this function can be loaded all the script even thought is not built yet!
 	function getInitForHscript():Void
 	{
-		var initFile:String = SONG.song.toLowerCase() + "/script";
-		if (FileSystem.exists(Paths.txt(initFile)))
+		var initFile:String = 'data/' + SONG.song.toLowerCase() + "/script";
+		var doPush:Bool = false;
+		if (sys.FileSystem.exists(Paths.file(initFile)))
 		{
-			try
-			{
-				new HscriptCode(CoolUtil.coolStringFile(Paths.txt(initFile)));
-			}
-			catch (e:Dynamic)
-			{
-				// Log.error("Error loading or parsing Haxe script file: " + Paths.txt(initFile));
-				lime.app.Application.current.window.alert("Error loading script:\n" + e);
-			}
+			initFile = Paths.file(initFile);
+			doPush = true;
 		}
 		else
 		{
-			trace("we dont have any call script.txt");
+			initFile = Paths.getPreloadPath(initFile);
+			if (sys.FileSystem.exists(initFile))
+			{
+				doPush = true;
+			}
+		}
+
+		if (doPush)
+		{
+			try
+			{
+				new HscriptCode(CoolUtil.coolStringFile(initFile));
+			}
+			catch (e:Dynamic)
+			{
+				lime.app.Application.current.window.alert(Std.string(e), "Hscript Error!");
+			}
 		}
 	}
 
@@ -209,12 +220,30 @@ class PlayState extends MusicBeat
 		}
 	}
 
+	public static function workOnBeatHit(atBeat:Int, code:Dynamic)
+	{
+		if (init.curBeat == atBeat)
+		{
+			// using code to run
+			HscriptCode.execute(code);
+		}
+	}
+
+	public static function workOnStepHit(atStep:Int, code:Dynamic)
+	{
+		if (init.curStep == atStep)
+		{
+			// using code to run
+			HscriptCode.execute(code);
+		}
+	}
+
 	override function create()
 	{
 		super.create();
 		init = this;
 		getInitForHscript();
-		SaveData.getCurrentInit();
+		SaveData.getSaveData();
 		if (FlxG.sound.music != null)
 			FlxG.sound.music.stop();
 
@@ -235,14 +264,19 @@ class PlayState extends MusicBeat
 		if (SONG == null)
 			SONG = Song.loadFromJson('tutorial');
 
-		switch (SONG.song.toLowerCase())
+		/*switch (SONG.song.toLowerCase())
+			{
+				case 'senpai':
+					dialogue = CoolUtil.coolTextFile(Paths.txt('senpai/senpaiDialogue'));
+				case 'roses':
+					dialogue = CoolUtil.coolTextFile(Paths.txt('roses/rosesDialogue'));
+				case 'thorns':
+					dialogue = CoolUtil.coolTextFile(Paths.txt('thorns/thornsDialogue'));
+		}*/
+
+		if (FileSystem.exists(Paths.txt(SONG.song.toLowerCase() + '/' + SONG.song.toLowerCase() + 'Dialogue')))
 		{
-			case 'senpai':
-				dialogue = CoolUtil.coolTextFile(Paths.txt('senpai/senpaiDialogue'));
-			case 'roses':
-				dialogue = CoolUtil.coolTextFile(Paths.txt('roses/rosesDialogue'));
-			case 'thorns':
-				dialogue = CoolUtil.coolTextFile(Paths.txt('thorns/thornsDialogue'));
+			dialogue = CoolUtil.coolTextFile(Paths.txt(SONG.song.toLowerCase() + '/' + SONG.song.toLowerCase() + 'Dialogue'));
 		}
 
 		Conductor.mapBPMChanges(SONG);
@@ -262,42 +296,16 @@ class PlayState extends MusicBeat
 					lime.app.Application.current.window.alert("Error loading stage:\n" + e, "Error Loading Stage!");
 				}
 			case 'pico' | 'blammed' | 'philly':
-				curStage = 'philly';
-
-				var bg:FlxSprite = new FlxSprite(-100).loadGraphic(Paths.image('stages/philly/sky'));
-				bg.scrollFactor.set(0.1, 0.1);
-				add(bg);
-
-				var city:FlxSprite = new FlxSprite(-10).loadGraphic(Paths.image('stages/philly/city'));
-				city.scrollFactor.set(0.3, 0.3);
-				city.setGraphicSize(Std.int(city.width * 0.85));
-				city.updateHitbox();
-				add(city);
-
-				phillyCityLights = new FlxTypedGroup<FlxSprite>();
-				add(phillyCityLights);
-
-				for (i in 0...5)
+				try
 				{
-					var light:FlxSprite = new FlxSprite(city.x).loadGraphic(Paths.image('stages/philly/win' + i));
-					light.scrollFactor.set(0.3, 0.3);
-					light.visible = false;
-					light.setGraphicSize(Std.int(light.width * 0.85));
-					light.updateHitbox();
-					light.antialiasing = true;
-					phillyCityLights.add(light);
+					var path:String = Paths.file("stage/philly.txt");
+					new HscriptCode(CoolUtil.coolStringFile(path));
 				}
-
-				var streetBehind:FlxSprite = new FlxSprite(-40, 50).loadGraphic(Paths.image('stages/philly/behindTrain'));
-				add(streetBehind);
-
-				phillyTrain = new FlxSprite(2000, 360).loadGraphic(Paths.image('stages/philly/train'));
-				add(phillyTrain);
-
-				trainSound = new FlxSound().loadEmbedded(Paths.sound('train_passes'));
-				FlxG.sound.list.add(trainSound);
-				var street:FlxSprite = new FlxSprite(-40, streetBehind.y).loadGraphic(Paths.image('stages/philly/street'));
-				add(street);
+				catch (e:Dynamic)
+				{
+					trace("Error loading stage:\n" + e);
+					lime.app.Application.current.window.alert("Error loading stage:\n" + e, "Error Loading Stage!");
+				}
 			case 'milf' | 'satin-panties' | 'high':
 				curStage = 'limo';
 				defaultCamZoom = 0.90;
@@ -602,7 +610,7 @@ class PlayState extends MusicBeat
 
 		strumLine = new FlxSprite(0, 50).makeGraphic(FlxG.width, 10);
 		strumLine.scrollFactor.set();
-		if (FlxG.save.data.downscroll)
+		if (SaveData.saveData.get("downscroll"))
 			strumLine.y = FlxG.height - 150;
 		strumLineNotes = new FlxTypedGroup<FlxSprite>();
 		add(strumLineNotes);
@@ -634,7 +642,7 @@ class PlayState extends MusicBeat
 		healthBarBG.screenCenter(X);
 		healthBarBG.scrollFactor.set();
 		add(healthBarBG);
-		if (FlxG.save.data.downscroll)
+		if (SaveData.saveData.get("downscroll"))
 			healthBarBG.y = FlxG.height * 0.1;
 		healthBar = new FlxBar(healthBarBG.x + 4, healthBarBG.y + 4, RIGHT_TO_LEFT, Std.int(healthBarBG.width - 8), Std.int(healthBarBG.height - 8), this,
 			'health', 0, 2);
@@ -654,7 +662,7 @@ class PlayState extends MusicBeat
 		scoreTxt = new FlxText(0, healthBarBG.y + 36, FlxG.width, "", 18);
 		scoreTxt.setFormat(Paths.font("vcr.ttf"), 18, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 
-		if (FlxG.save.data.advanceDisplay)
+		if (SaveData.saveData.get("advanceDisplay"))
 		{
 			accuracyTxt = new FlxText(5, healthBarBG.y + 33, FlxG.width, "", 18);
 			accuracyTxt.scrollFactor.set();
@@ -1284,7 +1292,7 @@ class PlayState extends MusicBeat
 		}
 
 		scoreTxt.text = "Score: " + songScore + " - Misses: " + songMisses;
-		if (FlxG.save.data.advanceDisplay)
+		if (SaveData.saveData.get("advanceDisplay"))
 		{
 			accuracyTxt.text = "Accuracy: " + truncateFloat(accuracy, 2) + "%" + "\nRating as: " + daPopUp;
 		}
@@ -1441,7 +1449,7 @@ class PlayState extends MusicBeat
 		{
 			notes.forEachAlive(function(daNote:Note)
 			{
-				var scrollDown = FlxG.save.data.dowscroll;
+				var scrollDown = SaveData.saveData.get("downscroll");
 
 				if ((scrollDown && daNote.y < -daNote.height) || (!scrollDown && daNote.y > FlxG.height))
 				{
@@ -1530,7 +1538,7 @@ class PlayState extends MusicBeat
 					daNote.destroy();
 				}
 
-				if (FlxG.save.data.downscroll)
+				if (SaveData.saveData.get("downscroll"))
 					daNote.y = (strumLine.y - (Conductor.songPosition - daNote.strumTime) * (-0.45 * FlxMath.roundDecimal(SONG.speed, 2)));
 				else
 					daNote.y = (strumLine.y - (Conductor.songPosition - daNote.strumTime) * (0.45 * FlxMath.roundDecimal(SONG.speed, 2)));
@@ -1640,7 +1648,7 @@ class PlayState extends MusicBeat
 			{
 				for (shit in 0...pressArray.length)
 				{ // if a direction is hit that shouldn't be
-					if (pressArray[shit] && !directionList.contains(shit) && !FlxG.save.data.ghosttap)
+					if (pressArray[shit] && !directionList.contains(shit) && !SaveData.saveData.get("ghosttap"))
 						noteMiss(shit);
 				}
 				for (coolNote in possibleNotes)
@@ -1652,7 +1660,7 @@ class PlayState extends MusicBeat
 			else
 			{
 				for (shit in 0...pressArray.length)
-					if (pressArray[shit] && !FlxG.save.data.ghosttap)
+					if (pressArray[shit] && !SaveData.saveData.get("ghosttap"))
 						noteMiss(shit);
 			}
 		}
@@ -1919,7 +1927,7 @@ class PlayState extends MusicBeat
 	{
 		if (keyP)
 			goodNoteHit(note);
-		else if (!FlxG.save.data.ghosttap)
+		else if (!SaveData.saveData.get("ghosttap"))
 		{
 			badNoteCheck();
 		}

@@ -16,5 +16,7 @@ Also, if you gonna use this engine, dont worry about your disk, dont need to hav
 # Some issues still in Neko Engine:
 - Uncaught exeption `max_string_size reached` (not fixed yet, build on `hl` will not get that error) (also it from `neko` target too)
 - dialogue can be played but the `.finished` is make game  crash if you press enter while dialogue playing (tip: just wait the dialogue is done and is work normally!)
+- this engine is super buggy! (NOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO)
+- hscript stage, function is still wip
 # Some info:
 I really need help ;_;

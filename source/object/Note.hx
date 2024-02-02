@@ -1,6 +1,7 @@
 package object;
 
 import backend.Conductor;
+import backend.SaveData;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.graphics.frames.FlxAtlasFrames;
@@ -124,7 +125,7 @@ class Note extends FlxSprite
 		{
 			noteScore * 0.2;
 			alpha = 0.6;
-			if (FlxG.save.data.dowscroll)
+			if (SaveData.saveData.get("downscroll"))
 				angle = 180;
 			x += width / 2;
 

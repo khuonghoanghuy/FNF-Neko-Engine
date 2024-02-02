@@ -46,10 +46,21 @@ class HscriptCode
 		interp.variables.set("RunEvent", PlayState.runEvent);
 		interp.variables.set("MakeBG", PlayState.makeBG);
 		interp.variables.set("MakeAnimateBG", PlayState.makeAnimateBG);
-		interp.variables.set("WorkOnBeatHit", PlayState.init.beatHit);
-		interp.variables.set("WorkOnStepHit", PlayState.init.stepHit);
+		interp.variables.set("WorkOnBeatHit", PlayState.workOnBeatHit);
+		interp.variables.set("WorkOnStepHit", PlayState.workOnStepHit);
 
 		trace(interp.execute(program));
 		interp.execute(program);
+	}
+
+	public static function execute(codeToRun:String):Dynamic
+	{
+		var parser = new hscript.Parser();
+		var interp = new hscript.Interp();
+
+		@:privateAccess
+		parser.line = 1;
+		parser.allowTypes = true;
+		return interp.execute(parser.parseString(codeToRun));
 	}
 }

@@ -1,0 +1,6 @@
+PlayState.defaultCamZoom = 0.9;
+PlayState.curStage = 'philly';
+
+MakeBG('stages/philly/sky', -100, 0, 1, false, false, 0.1, 0.1);
+MakeBG('stages/philly/city', -10, 0, 1, false, false, 0.3, 0.3);
+MakeBG('stages/philly/behindTrain', -40, 50, 1, false, false, 1, 1);
