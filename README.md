@@ -16,7 +16,7 @@ Also, if you gonna use this engine, dont worry about your disk, dont need to hav
 
 And more
 
-# Some tip for Neko Engine only
+# Some tip for Neko Engine only:
 - If you gonna make own State or SubState, replace `MusicBeatState` or `MusicBeatSubstate` with `MusicBeat` or `MusicBeatSub` (idk why thought but i like this :>)
 - Neko Engine is using only `hl` build so if you gonna making da mod using this engine, try `lime build hl` (can be run on windows, macos or linux) (will execute by your opera system you using, like windows will execute as normall `.exe` file!)
 - Speed to build a execute file is more faster than and is still on the desktop, wow (if u just using `hl` lol)
@@ -28,3 +28,20 @@ And more
 - hscript stage, function is still wip
 # Some info:
 I really need help ;_;
+
+# Build tutorial thingie:
+download [haxe 4.2.5 version](https://haxe.org/download/version/4.2.5/) however, you can still using a lastest version but i recommended to using 4.2.5 version cause that my version to build
+
+for haxelib, if possible, try 
+```
+haxelib install flixel
+haxelib install openfl
+haxelib install lime
+haxelib install hscript
+haxelib install flixel-addons
+haxelib install flixel-ui
+```
+
+or if you cannot install them by the command, try download manually by yourself
+
+after that, you are now able to compile the source! by using command in the main folder and type `haxelib run lime test hl`, the command will took some time to build and run (pretty fast thought!)
