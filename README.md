@@ -45,3 +45,5 @@ haxelib install flixel-ui
 or if you cannot install them by the command, try download manually by yourself
 
 after that, you are now able to compile the source! by using command in the main folder and type `haxelib run lime test hl`, the command will took some time to build and run (pretty fast thought!)
+
+or if you dont know how to using command, just go to the build folder and use 1 or 2 files bat, should able to build too!

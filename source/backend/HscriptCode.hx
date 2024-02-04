@@ -48,6 +48,16 @@ class HscriptCode
 		interp.variables.set("MakeAnimateBG", PlayState.makeAnimateBG);
 		interp.variables.set("WorkOnBeatHit", PlayState.workOnBeatHit);
 		interp.variables.set("WorkOnStepHit", PlayState.workOnStepHit);
+		interp.variables.set("WorkOnCurrentUpdate", PlayState.workOnCurrentUpdate);
+		interp.variables.set("WorkOnUpdate", PlayState.workOnUpdate);
+		interp.variables.set("add", function(object:flixel.FlxBasic)
+		{
+			PlayState.init.add(object);
+		});
+		interp.variables.set("remove", function(object:flixel.FlxBasic)
+		{
+			PlayState.init.remove(object);
+		});
 
 		trace(interp.execute(program));
 		interp.execute(program);

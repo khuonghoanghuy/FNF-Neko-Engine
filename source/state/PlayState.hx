@@ -1283,6 +1283,20 @@ class PlayState extends MusicBeat
 		icon.updateHitbox();
 	}
 
+	public static function workOnUpdate(atUpdate:Float, code:String)
+	{
+		if (FlxG.elapsed == atUpdate)
+		{
+			HscriptCode.execute(code);
+		}
+	}
+
+	public static function workOnCurrentUpdate(code:String)
+	{
+		// try to make FlxG.elasped can be using anytime
+		workOnUpdate(FlxG.sound.music.playing ? Conductor.songPosition : FlxG.sound.music.time, code);
+	}
+
 	override function update(elapsed:Float)
 	{
 		super.update(elapsed);
