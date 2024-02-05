@@ -1,5 +1,8 @@
 PlayState.curStage = 'spooky';
 
+var lightningStrikeBeat = 0;
+var lightningOffset = 8;
+
 var spookyBG = new FlxSprite(-200, -100);
 spookyBG.frames = Paths.getSparrowAtlas('stages/spooky/halloween_bg');
 spookyBG.animation.addByPrefix('idle', 'halloweem bg0');
@@ -7,22 +10,12 @@ spookyBG.animation.addByPrefix('lightning', 'halloweem bg lightning strike', 24,
 spookyBG.animation.play('idle');
 add(spookyBG);
 
-WorkOnCurrentUpdate('
-    var lightningStrikeBeat = 0;
-    var lightningOffset = 8;
-    if (lightningStrikeBeat < PlayState.curBeat) {
-        lightningStrikeBeat = PlayState.curBeat + Math.random() * 6;
-        lightningOffset = FlxG.random.int(8, 24);
-    }
-
-    if (lightningStrikeBeat % 4 == 0) {
-        if (FlxG.random.bool(10) && !spookyBG.animation.play("lightning")) {
-            FlxG.sound.play(Paths.soundRandom("thunder_", 1, 2));
-            spookyBG.animation.play("lightning");
-		    PlayState.boyfriend.playAnim("scared", true);
-		    PlayState.gf.playAnim("scared", true);
-        }
-        else 
-            spookyBG.animation.play("idle");
-    }
-');
+if (FlxG.random.bool(10) && PlayState.curBeat > lightningStrikeBeat + lightningOffset)
+{
+	FlxG.sound.play(Paths.soundRandom('thunder_', 1, 2));
+	spookyBG.animation.play('lightning');
+	lightningStrikeBeat = PlayState.curBeat;
+	lightningOffset = FlxG.random.int(8, 24);
+	PlayState.boyfriend.playAnim('scared', true);
+	PlayState.gf.playAnim('scared', true);
+}

@@ -1,0 +1,20 @@
+Game.curStage = 'schoolEvil';
+
+var posX = 400;
+var posY = 200;
+
+var bg = new FlxSprite(posX, posY);
+bg.frames = Paths.getSparrowAtlas('stages/weeb/animatedEvilSchool');
+bg.animation.addByPrefix('idle', 'background 2', 24);
+bg.animation.play('idle');
+bg.scrollFactor.set(0.8, 0.9);
+bg.scale.set(6, 6);
+add(bg);
+
+PlayState.boyfriend.x = 940;
+PlayState.boyfriend.y = 320;
+PlayState.gf.x = 580;
+PlayState.gf.y = 430;
+
+PlayState.camFollow.x = PlayState.boyfriend.getMidpoint().x - 200;
+PlayState.camFollow.y = PlayState.boyfriend.getMidpoint().y - 200;

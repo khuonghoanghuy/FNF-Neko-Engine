@@ -2,6 +2,7 @@ package backend;
 
 import flixel.FlxCamera;
 import flixel.FlxG;
+import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.util.FlxColor;
 import object.Boyfriend;
@@ -10,6 +11,8 @@ import state.PlayState;
 
 class HscriptCode
 {
+	var playState:PlayState = null;
+
 	public function new(haxeScript:String)
 	{
 		// super(haxeScript);
@@ -21,6 +24,7 @@ class HscriptCode
 		interp.variables.set("Math", Math);
 		interp.variables.set("FlxG", FlxG);
 		interp.variables.set("PlayState", PlayState.init);
+		interp.variables.set("Game", PlayState.init); // same
 		// interp.variables.set("FlxColor", FlxColor);
 		interp.variables.set("FlxSprite", FlxSprite);
 		interp.variables.set('FlxCamera', FlxCamera);
@@ -28,6 +32,14 @@ class HscriptCode
 		interp.variables.set('setVar', function(name:String, value:Dynamic)
 		{
 			PlayState.init.variables.set(name, value);
+		});
+		interp.variables.set('SetProperty', function(vari:String, value:String)
+		{
+			return Reflect.setProperty(playState, vari, value.split('.'));
+		});
+		interp.variables.set("SetPostion", function(type:FlxObject, x:Float, y:Float)
+		{
+			return type.setPosition(x, y);
 		});
 		interp.variables.set("ChangeEvent", function(typeEvent:String, value1:String, value2:String, value3:String)
 		{
@@ -46,10 +58,29 @@ class HscriptCode
 		interp.variables.set("RunEvent", PlayState.runEvent);
 		interp.variables.set("MakeBG", PlayState.makeBG);
 		interp.variables.set("MakeAnimateBG", PlayState.makeAnimateBG);
-		interp.variables.set("WorkOnBeatHit", PlayState.workOnBeatHit);
-		interp.variables.set("WorkOnStepHit", PlayState.workOnStepHit);
+		interp.variables.set("WorkOnCreate", PlayState.workOnCreate);
+		interp.variables.set("WorkOnBeatHit", function(atBeat, code:String)
+		{
+			if (PlayState.init.curBeat == atBeat)
+			{
+				execute(code);
+			}
+		});
+		interp.variables.set("WorkOnStepHit", function(atStep, code:String)
+		{
+			if (PlayState.init.curStep == atStep)
+			{
+				execute(code);
+			}
+		});
 		interp.variables.set("WorkOnCurrentUpdate", PlayState.workOnCurrentUpdate);
-		interp.variables.set("WorkOnUpdate", PlayState.workOnUpdate);
+		interp.variables.set("WorkOnUpdate", function(atUpdate:Float, code:String)
+		{
+			if (FlxG.elapsed == atUpdate)
+			{
+				execute(code);
+			}
+		});
 		interp.variables.set("add", function(object:flixel.FlxBasic)
 		{
 			PlayState.init.add(object);

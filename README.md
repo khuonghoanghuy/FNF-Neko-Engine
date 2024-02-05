@@ -42,7 +42,12 @@ haxelib install flixel-addons
 haxelib install flixel-ui
 ```
 
-or if you cannot install them by the command, try download manually by yourself
+also if u are having git, try
+```
+haxelib git hxlua https://github.com/MAJigsaw77/hxlua.git
+```
+
+or if you cannot install them by the command, try download manually by yourselfz
 
 after that, you are now able to compile the source! by using command in the main folder and type `haxelib run lime test hl`, the command will took some time to build and run (pretty fast thought!)
 

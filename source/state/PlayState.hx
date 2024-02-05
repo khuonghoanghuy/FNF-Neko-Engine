@@ -35,6 +35,7 @@ import object.Character;
 import object.DialogueBox;
 import object.HealthIcon;
 import object.Note;
+import openfl.errors.Error;
 import subState.GameOverSubstate;
 import subState.PauseSubState;
 import sys.FileSystem;
@@ -220,22 +221,9 @@ class PlayState extends MusicBeat
 		}
 	}
 
-	public static function workOnBeatHit(atBeat:Int, code:Dynamic)
+	public static function workOnCreate(code:String = null)
 	{
-		if (init.curBeat == atBeat)
-		{
-			// using code to run
-			HscriptCode.execute(code);
-		}
-	}
-
-	public static function workOnStepHit(atStep:Int, code:Dynamic)
-	{
-		if (init.curStep == atStep)
-		{
-			// using code to run
-			HscriptCode.execute(code);
-		}
+		HscriptCode.execute(code);
 	}
 
 	override function create()
@@ -263,16 +251,6 @@ class PlayState extends MusicBeat
 
 		if (SONG == null)
 			SONG = Song.loadFromJson('tutorial');
-
-		/*switch (SONG.song.toLowerCase())
-			{
-				case 'senpai':
-					dialogue = CoolUtil.coolTextFile(Paths.txt('senpai/senpaiDialogue'));
-				case 'roses':
-					dialogue = CoolUtil.coolTextFile(Paths.txt('roses/rosesDialogue'));
-				case 'thorns':
-					dialogue = CoolUtil.coolTextFile(Paths.txt('thorns/thornsDialogue'));
-		}*/
 
 		if (FileSystem.exists(Paths.txt(SONG.song.toLowerCase() + '/' + SONG.song.toLowerCase() + 'Dialogue')))
 		{
@@ -476,19 +454,17 @@ class PlayState extends MusicBeat
 				bgGirls.updateHitbox();
 				add(bgGirls);
 			case 'thorns':
-				curStage = 'schoolEvil';
-				var posX = 400;
-				var posY = 200;
-
-				var bg:FlxSprite = new FlxSprite(posX, posY);
-				bg.frames = Paths.getSparrowAtlas('stages/weeb/animatedEvilSchool');
-				bg.animation.addByPrefix('idle', 'background 2', 24);
-				bg.animation.play('idle');
-				bg.scrollFactor.set(0.8, 0.9);
-				bg.scale.set(6, 6);
-				add(bg);
+				try
+				{
+					var path:String = Paths.file("stage/schoolEvil.txt");
+					new HscriptCode(CoolUtil.coolStringFile(path));
+				}
+				catch (e:Dynamic)
+				{
+					trace("Error loading stage:\n" + e);
+					lime.app.Application.current.window.alert("Error loading stage:\n" + e, "Error Loading Stage!");
+				}
 			default:
-				// using stage.txt for hscript to make as a stage
 				try
 				{
 					var path:String = Paths.file("stage/stage.txt");
@@ -582,11 +558,6 @@ class PlayState extends MusicBeat
 				boyfriend.x += 320;
 				dad.y -= 80;
 			case 'school':
-				boyfriend.x += 200;
-				boyfriend.y += 220;
-				gf.x += 180;
-				gf.y += 300;
-			case 'schoolEvil':
 				boyfriend.x += 200;
 				boyfriend.y += 220;
 				gf.x += 180;
@@ -685,6 +656,8 @@ class PlayState extends MusicBeat
 		doof.cameras = [camHUD];
 
 		startingSong = true;
+
+		// workOnCreate();
 
 		if (isStoryMode)
 		{
@@ -1283,15 +1256,27 @@ class PlayState extends MusicBeat
 		icon.updateHitbox();
 	}
 
-	public static function workOnUpdate(atUpdate:Float, code:String)
+	public static function workOnUpdate(atUpdate:Float = 0, code:String = null)
 	{
 		if (FlxG.elapsed == atUpdate)
 		{
-			HscriptCode.execute(code);
+			try
+			{
+				eval(code);
+			}
+			catch (e:Error)
+			{
+				trace('ERROR ON UPDATE:\n\n$code\n\n' + e.message + '\n\n');
+			}
 		}
 	}
 
-	public static function workOnCurrentUpdate(code:String)
+	static function eval(code:String = null)
+	{
+		HscriptCode.execute(code);
+	}
+
+	public static function workOnCurrentUpdate(code:String = null)
 	{
 		// try to make FlxG.elasped can be using anytime
 		workOnUpdate(FlxG.sound.music.playing ? Conductor.songPosition : FlxG.sound.music.time, code);
@@ -1300,6 +1285,8 @@ class PlayState extends MusicBeat
 	override function update(elapsed:Float)
 	{
 		super.update(elapsed);
+		/*workOnUpdate();
+			workOnCurrentUpdate(); */
 		if (FlxG.save.data.camLerpPlayState)
 		{
 			FlxG.camera.followLerp = CoolUtil.camLerpShit(0.10);
@@ -1419,9 +1406,6 @@ class PlayState extends MusicBeat
 					case 'mall':
 						camFollow.y = boyfriend.getMidpoint().y - 200;
 					case 'school':
-						camFollow.x = boyfriend.getMidpoint().x - 200;
-						camFollow.y = boyfriend.getMidpoint().y - 200;
-					case 'schoolEvil':
 						camFollow.x = boyfriend.getMidpoint().x - 200;
 						camFollow.y = boyfriend.getMidpoint().y - 200;
 				}
@@ -2022,6 +2006,7 @@ class PlayState extends MusicBeat
 	override function stepHit()
 	{
 		super.stepHit();
+		// workOnStepHit();
 		if (FlxG.sound.music.time > Conductor.songPosition + 20 || FlxG.sound.music.time < Conductor.songPosition - 20)
 		{
 			resyncVocals();
@@ -2061,7 +2046,7 @@ class PlayState extends MusicBeat
 	override function beatHit()
 	{
 		super.beatHit();
-
+		// workOnBeatHit();
 		if (generatedMusic)
 		{
 			notes.sort(FlxSort.byY, FlxSort.DESCENDING);
