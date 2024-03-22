@@ -1,10 +1,9 @@
-package backend;
+package hscript;
 
 import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
-import flixel.util.FlxColor;
 import object.Boyfriend;
 import object.Character;
 import state.PlayState;
@@ -56,8 +55,6 @@ class HscriptCode
 			}
 		});
 		interp.variables.set("RunEvent", PlayState.runEvent);
-		interp.variables.set("MakeBG", PlayState.makeBG);
-		interp.variables.set("MakeAnimateBG", PlayState.makeAnimateBG);
 		interp.variables.set("WorkOnCreate", PlayState.workOnCreate);
 		interp.variables.set("WorkOnBeatHit", function(atBeat, code:String)
 		{

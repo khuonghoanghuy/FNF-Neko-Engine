@@ -10,12 +10,14 @@ spookyBG.animation.addByPrefix('lightning', 'halloweem bg lightning strike', 24,
 spookyBG.animation.play('idle');
 add(spookyBG);
 
-if (FlxG.random.bool(10) && PlayState.curBeat > lightningStrikeBeat + lightningOffset)
-{
-	FlxG.sound.play(Paths.soundRandom('thunder_', 1, 2));
-	spookyBG.animation.play('lightning');
-	lightningStrikeBeat = PlayState.curBeat;
-	lightningOffset = FlxG.random.int(8, 24);
-	PlayState.boyfriend.playAnim('scared', true);
-	PlayState.gf.playAnim('scared', true);
-}
+UpdateFunction('
+	if (FlxG.random.bool(10) && PlayState.curBeat > lightningStrikeBeat + lightningOffset)
+	{
+		playRandomSound("thunder_", 1, 2);
+		spookyBG.animation.play("lightning");
+		lightningStrikeBeat = PlayState.curBeat;
+		lightningOffset = FlxG.random.int(8, 24);
+		PlayState.boyfriend.playAnim("scared", true);
+		PlayState.gf.playAnim("scared", true);
+	}
+');

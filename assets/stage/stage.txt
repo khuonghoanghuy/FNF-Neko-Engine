@@ -1,6 +1,6 @@
 PlayState.defaultCamZoom = 0.9;
 PlayState.curStage = 'stage';
 
-MakeBG('stages/stage/stageback', -600, -200, 1, false, false, 0.9, 0.9);
-MakeBG('stages/stage/stagefront', -650, 600, 1, false, false, 0.9, 0.9);
-MakeBG('stages/stage/stagecurtains', -600, -200, 1, false, false, 1.3, 1.3);
+makeBG('stages/stage/stageback', -600, -200, 1, false, false, 0.9, 0.9);
+makeBG('stages/stage/stagefront', -650, 600, 1, false, false, 0.9, 0.9);
+makeBG('stages/stage/stagecurtains', -600, -200, 1, false, false, 1.3, 1.3);
