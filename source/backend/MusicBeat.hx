@@ -28,9 +28,9 @@ class MusicBeat extends FlxUIState
 		curBeat = 0;
 		FlxG.fixedTimestep = false;
 		openfl.system.System.gc();
-		if (SaveData.saveData.get("maxiumFPSCapper") >= 0.01
-			&& SaveData.saveData.get("maxiumFPSCapper") <= Std.parseInt(CoolUtil.coolStringFile(Paths.txt("fpsMaxiumCap"))))
-			Lib.current.stage.frameRate = SaveData.saveData.get("maxiumFPSCapper");
+		if (SaveData.maxiumFPSCapper >= 0.01
+			&& SaveData.maxiumFPSCapper <= Std.parseInt(CoolUtil.coolStringFile(Paths.txt("fpsMaxiumCap"))))
+			Lib.current.stage.frameRate = SaveData.maxiumFPSCapper;
 		else
 			Lib.current.stage.frameRate = 60; // or any other default value
 	}

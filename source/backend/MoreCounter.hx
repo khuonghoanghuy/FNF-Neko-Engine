@@ -23,7 +23,7 @@ class MoreCounter extends TextField
 		x = inX;
 		y = inY;
 		selectable = false;
-		defaultTextFormat = new TextFormat("_sans", 12, inCol, false, false, false, null, null, LEFT, null, null, null, null);
+		defaultTextFormat = new TextFormat("_sans", 13, inCol, false, false, false, null, null, LEFT, null, null, null, null);
 		// defaultTextFormat = new TextFormat("_sans", 14, inCol);
 
 		addEventListener(Event.ENTER_FRAME, onEnter);

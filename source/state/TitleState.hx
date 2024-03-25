@@ -50,8 +50,8 @@ class TitleState extends MusicBeat
 		// DEBUG BULLSHIT
 
 		super.create();
-		SaveData.main();
-		SaveData.saveInit();
+		SaveData.init();
+		// SaveData.saveInit();
 		Highscore.load();
 
 		if (FlxG.save.data.weekUnlocked != null)

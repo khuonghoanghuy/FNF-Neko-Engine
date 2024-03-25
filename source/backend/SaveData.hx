@@ -1,57 +1,72 @@
 package backend;
 
-import haxe.ds.StringMap;
+import flixel.FlxG;
+import flixel.util.FlxSave;
 
 class SaveData
 {
-	public static var saveData:StringMap<Dynamic> = new StringMap<Dynamic>();
+	// first, add ur variables of data here!
+	public static var ghosttap:Bool = true;
+	public static var downscroll:Bool = false;
+	public static var maxiumFPSCapper:Int = 60;
+	public static var camLerpPlayState:Bool = false;
 
-	public static function main()
+	// after that, add ur variable of save data here
+	public static function init():Void
 	{
-		saveInit();
-		trace(saveData.get("ghosttap")); // Output: true
-		trace(saveData.get("downscroll")); // Output: false
-		trace(saveData.get("advanceDisplay")); // Output: true
-		trace(saveData.get("maxiumFPSCapper")); // Output: 60
-		trace(saveData.get("camLerpPlayState")); // Output: true
+		if (FlxG.save.data.ghosttap == null)
+		{
+			FlxG.save.data.ghosttap = ghosttap;
+		}
 
-		var saveDataCopy = getSaveData();
-		trace(saveDataCopy.get("ghosttap")); // Output: true
-		trace(saveDataCopy.get("downscroll")); // Output: false
-		trace(saveDataCopy.get("advanceDisplay")); // Output: true
-		trace(saveDataCopy.get("maxiumFPSCapper")); // Output: 60
-		trace(saveDataCopy.get("camLerpPlayState")); // Output: true
+		if (FlxG.save.data.downscroll == null)
+		{
+			FlxG.save.data.downscroll = downscroll;
+		}
+
+		if (FlxG.save.data.maxiumFPSCapper == null)
+		{
+			FlxG.save.data.maxiumFPSCapper = maxiumFPSCapper;
+		}
+
+		if (FlxG.save.data.camLerpPlayState == null)
+		{
+			FlxG.save.data.camLerpPlayState = camLerpPlayState;
+		}
+
+		var save = new FlxSave();
+		save.bind("funkin", "huy1234th");
+		save.flush();
+		trace("Save Data has init!!");
+		reinit();
 	}
 
-	public static function saveInit()
+	// finally, readd ur save data on reinit!
+	public static function reinit():Void
 	{
-		if (!saveData.exists("ghosttap"))
-			saveData.set("ghosttap", true);
+		if (FlxG.save.data.ghosttap != null)
+		{
+			ghosttap = FlxG.save.data.ghosttap;
+		}
 
-		if (!saveData.exists("downscroll"))
-			saveData.set("downscroll", false);
+		if (FlxG.save.data.downscroll != null)
+		{
+			downscroll = FlxG.save.data.downscroll;
+		}
 
-		if (!saveData.exists("advanceDisplay"))
-			saveData.set("advanceDisplay", true);
+		if (FlxG.save.data.maxiumFPSCapper != null)
+		{
+			maxiumFPSCapper = FlxG.save.data.maxiumFPSCapper;
+		}
 
-		if (!saveData.exists("maxiumFPSCapper"))
-			saveData.set("maxiumFPSCapper", 60);
+		if (FlxG.save.data.camLerpPlayState != null)
+		{
+			camLerpPlayState = FlxG.save.data.camLerpPlayState;
+		}
 
-		if (!saveData.exists("camLerpPlayState"))
-			saveData.set("camLerpPlayState", true);
-	}
-
-	public static function resetData()
-	{
-		saveData.set("ghosttap", true);
-		saveData.set("downscroll", false);
-		saveData.set("advanceDisplay", true);
-		saveData.set("maxiumFPSCapper", 60);
-		saveData.set("camLerpPlayState", true);
-	}
-
-	public static function getSaveData():StringMap<Dynamic>
-	{
-		return saveData.copy();
+		var save = new FlxSave();
+		save.bind("funkin", "huy1234th");
+		save.flush();
+		trace("Save Data has reInit!!");
 	}
 }

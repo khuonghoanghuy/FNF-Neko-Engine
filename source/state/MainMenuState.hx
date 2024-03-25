@@ -25,7 +25,7 @@ class MainMenuState extends MusicBeat
 
 	var optionShit:Array<String> = ['story mode', 'freeplay', 'donate', 'options'];
 
-	public static var curNekoEngineVersion:String = "0.1";
+	public static var curNekoEngineVersion:String = "1.0";
 
 	public static var warmOutdated:String; // should make a warm text!
 
@@ -90,12 +90,11 @@ class MainMenuState extends MusicBeat
 			menuItem.antialiasing = true;
 		}
 
-		FlxG.camera.follow(camFollow, null, 0.06);
+		FlxG.camera.follow(camFollow, LOCKON, 0.1);
 		var versionShit:FlxText = new FlxText(5, FlxG.height
-			- 22, 0,
+			- 18, 0,
 			"Neko Engine v"
 			+ curNekoEngineVersion
-			+ warmOutdated
 			+ " - FNF Engine v"
 			+ Application.current.meta.get('version'), 18);
 		versionShit.scrollFactor.set();

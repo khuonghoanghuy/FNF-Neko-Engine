@@ -42,7 +42,7 @@ class FPS extends TextField
 		currentFPS = 0;
 		selectable = false;
 		mouseEnabled = false;
-		defaultTextFormat = new TextFormat("_sans", 12, color);
+		defaultTextFormat = new TextFormat("_sans", 15, color, true);
 		text = "FPS: ";
 
 		cacheCount = 0;
@@ -72,8 +72,8 @@ class FPS extends TextField
 
 		var currentCount = times.length;
 		currentFPS = Math.round((currentCount + cacheCount) / 2);
-		if (currentFPS > SaveData.saveData.get("maxiumFPSCapper"))
-			currentFPS = SaveData.saveData.get("maxiumFPSCapper");
+		if (currentFPS > SaveData.maxiumFPSCapper)
+			currentFPS = SaveData.maxiumFPSCapper;
 
 		if (currentCount != cacheCount /*&& visible*/)
 		{

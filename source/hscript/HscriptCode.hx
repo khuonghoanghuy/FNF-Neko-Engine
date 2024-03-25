@@ -23,8 +23,8 @@ class HscriptCode
 		interp.variables.set("Math", Math);
 		interp.variables.set("FlxG", FlxG);
 		interp.variables.set("PlayState", PlayState.init);
-		interp.variables.set("Game", PlayState.init); // same
-		// interp.variables.set("FlxColor", FlxColor);
+		interp.variables.set("Game", PlayState.init);
+		interp.variables.set("Color", Color);
 		interp.variables.set("FlxSprite", FlxSprite);
 		interp.variables.set('FlxCamera', FlxCamera);
 		interp.variables.set("Paths", Paths);
@@ -39,44 +39,6 @@ class HscriptCode
 		interp.variables.set("SetPostion", function(type:FlxObject, x:Float, y:Float)
 		{
 			return type.setPosition(x, y);
-		});
-		interp.variables.set("ChangeEvent", function(typeEvent:String, value1:String, value2:String, value3:String)
-		{
-			switch (typeEvent)
-			{
-				case "changeDadChar":
-					PlayState.init.remove(PlayState.init.dad);
-					PlayState.init.dad = new Character(Std.parseFloat(value1), Std.parseFloat(value2), value3, false);
-					PlayState.init.add(PlayState.init.dad);
-				case "changeBfChar":
-					PlayState.init.remove(PlayState.init.boyfriend);
-					PlayState.init.boyfriend = new Boyfriend(Std.parseFloat(value1), Std.parseFloat(value2), value3);
-					PlayState.init.add(PlayState.init.boyfriend);
-			}
-		});
-		interp.variables.set("RunEvent", PlayState.runEvent);
-		interp.variables.set("WorkOnCreate", PlayState.workOnCreate);
-		interp.variables.set("WorkOnBeatHit", function(atBeat, code:String)
-		{
-			if (PlayState.init.curBeat == atBeat)
-			{
-				execute(code);
-			}
-		});
-		interp.variables.set("WorkOnStepHit", function(atStep, code:String)
-		{
-			if (PlayState.init.curStep == atStep)
-			{
-				execute(code);
-			}
-		});
-		interp.variables.set("WorkOnCurrentUpdate", PlayState.workOnCurrentUpdate);
-		interp.variables.set("WorkOnUpdate", function(atUpdate:Float, code:String)
-		{
-			if (FlxG.elapsed == atUpdate)
-			{
-				execute(code);
-			}
 		});
 		interp.variables.set("add", function(object:flixel.FlxBasic)
 		{

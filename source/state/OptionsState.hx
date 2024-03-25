@@ -92,54 +92,46 @@ class OptionsState extends MusicBeat
 				case "Controls":
 					FlxG.switchState(new ControlsState());
 				case "Ghost tap":
-					if (SaveData.saveData.get("ghosttap"))
+					if (SaveData.ghosttap)
 					{
-						SaveData.saveData.set("ghosttap", false);
+						SaveData.ghosttap = false;
 					}
-					else if (!SaveData.saveData.get("ghosttap"))
+					else if (!SaveData.ghosttap)
 					{
-						SaveData.saveData.set("ghosttap", false);
+						SaveData.ghosttap = true;
 					}
 					updatetext();
 				case "Downscroll":
-					if (SaveData.saveData.get("downscroll"))
+					if (SaveData.downscroll)
 					{
-						SaveData.saveData.set("downscroll", false);
+						SaveData.downscroll = false;
 					}
-					else if (!SaveData.saveData.get("downscroll"))
+					else if (!SaveData.downscroll)
 					{
-						SaveData.saveData.set("downscroll", false);
-					}
-					updatetext();
-				case "Advance Display":
-					if (SaveData.saveData.get("advanceDisplay"))
-					{
-						SaveData.saveData.set("advanceDisplay", false);
-					}
-					else if (!SaveData.saveData.get("advanceDisplay"))
-					{
-						SaveData.saveData.set("advanceDisplay", false);
+						SaveData.downscroll = true;
 					}
 					updatetext();
 				case "Camera Lerp":
-					if (SaveData.saveData.get("camLerpPlayState"))
+					if (SaveData.camLerpPlayState)
 					{
-						SaveData.saveData.set("camLerpPlayState", false);
+						SaveData.camLerpPlayState = false;
 					}
-					else if (!SaveData.saveData.get("camLerpPlayState"))
+					else if (!SaveData.camLerpPlayState)
 					{
-						SaveData.saveData.set("camLerpPlayState", false);
+						SaveData.camLerpPlayState = true;
 					}
 					updatetext();
 				case "Reset Data":
 					openSubState(new ResetDataSubState());
 			}
-			FlxG.save.flush();
-			FlxG.save.bind('funkin', 'huy1234th');
 		}
 
 		if (controls.BACK)
+		{
+			FlxG.save.flush();
+			FlxG.save.bind('funkin', 'huy1234th');
 			FlxG.switchState(new MainMenuState());
+		}
 		if (controls.UP_P)
 			changeSelection(-1);
 		if (controls.DOWN_P)
@@ -151,19 +143,17 @@ class OptionsState extends MusicBeat
 			{
 				case "Maxium FPS Cap":
 					value -= 10;
-					if (SaveData.saveData.get("maxiumFPSCapper") == 60)
+					if (SaveData.maxiumFPSCapper == 60)
 					{
-						SaveData.saveData.set("maxiumFPSCapper", 60);
+						SaveData.maxiumFPSCapper = 60;
 					}
 					else
 					{
-						SaveData.saveData.set("maxiumFPSCapper", value);
+						SaveData.maxiumFPSCapper = value;
 					}
 					updateFPS();
 					updatetext();
 			}
-			FlxG.save.flush();
-			FlxG.save.bind('funkin', 'huy1234th');
 		}
 		if (controls.RIGHT_R)
 		{
@@ -172,27 +162,25 @@ class OptionsState extends MusicBeat
 			{
 				case "Maxium FPS Cap":
 					value += 10;
-					if (SaveData.saveData.get("maxiumFPSCapper") == Std.parseInt(CoolUtil.coolStringFile(Paths.txt("fpsMaxiumCap"))))
+					if (SaveData.maxiumFPSCapper == Std.parseInt(CoolUtil.coolStringFile(Paths.txt("fpsMaxiumCap"))))
 					{
-						SaveData.saveData.set("maxiumFPSCapper", Std.parseInt(CoolUtil.coolStringFile(Paths.txt("fpsMaxiumCap"))));
+						SaveData.maxiumFPSCapper = Std.parseInt(CoolUtil.coolStringFile(Paths.txt("fpsMaxiumCap")));
 					}
 					else
 					{
-						SaveData.saveData.set("maxiumFPSCapper", value);
+						SaveData.maxiumFPSCapper = value;
 					}
 					updateFPS();
 					updatetext();
 			}
-			FlxG.save.flush();
-			FlxG.save.bind('funkin', 'huy1234th');
 		}
 	}
 
 	function updateFPS():Void
 	{
-		if (SaveData.saveData.get("maxiumFPSCapper") >= 0.01
-			&& SaveData.saveData.get("maxiumFPSCapper") <= Std.parseInt(CoolUtil.coolStringFile(Paths.txt("fpsMaxiumCap"))))
-			Lib.current.stage.frameRate = SaveData.saveData.get("maxiumFPSCapper");
+		if (SaveData.maxiumFPSCapper >= 0.01
+			&& SaveData.maxiumFPSCapper <= Std.parseInt(CoolUtil.coolStringFile(Paths.txt("fpsMaxiumCap"))))
+			Lib.current.stage.frameRate = SaveData.maxiumFPSCapper;
 		else
 			Lib.current.stage.frameRate = 60; // or any other default value
 	}
@@ -204,18 +192,14 @@ class OptionsState extends MusicBeat
 			case "Controls":
 				controlsStuff = "Change the Keybind from keyboard (bro idk how to write this ;_;): ";
 			case "Ghost tap":
-				controlsStuff = "Help you play more easier than ever with ghost tap: " + (SaveData.saveData.get("ghosttap") ? "ENABLE" : "DISABLE");
+				controlsStuff = "Help you play more easier than ever with ghost tap: " + (SaveData.ghosttap ? "ENABLE" : "DISABLE");
 			case "Downscroll":
-				controlsStuff = "If you can't play upscroll, downscroll will help you play much better: "
-					+ (SaveData.saveData.get("downscroll") ? "ENABLE" : "DISABLE");
-			case "Advance Display":
-				controlsStuff = "Display more stuff like Accuracy, Ranking and more: " + (SaveData.saveData.get("advanceDisplay") ? "ENABLE" : "DISABLE");
+				controlsStuff = "If you can't play upscroll, downscroll will help you play much better: " + (SaveData.downscroll ? "ENABLE" : "DISABLE");
 			case "Maxium FPS Cap":
-				controlsStuff = "Let FPS capping more FPS than ever (WARMING: THIS ONE IS GOT MUCH FPS MAY CAUSE CRASH GAME!!): "
-					+ SaveData.saveData.get("maxiumFPSCapper");
+				controlsStuff = "Let FPS capping more FPS than ever (WARMING: THIS ONE IS GOT MUCH FPS MAY CAUSE CRASH GAME!!): " + SaveData.maxiumFPSCapper;
 			case "Camera Lerp":
 				controlsStuff = "If the camera move too choppy and laggy on your device, turn this options as DISABLE: "
-					+ (SaveData.saveData.get("camLerpPlayState") ? "ENABLE" : "DISABLE");
+					+ (SaveData.camLerpPlayState ? "ENABLE" : "DISABLE");
 			case "Reset Data":
 				controlsStuff = "This will reset all of your progress in game";
 		}

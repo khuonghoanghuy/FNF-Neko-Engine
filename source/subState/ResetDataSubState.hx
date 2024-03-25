@@ -60,7 +60,7 @@ class ResetDataSubState extends MusicBeatSub
 		if (controls.ACCEPT)
 		{
 			Application.current.window.alert("Game now will be exit!", "FNF Neko Engine");
-			SaveData.resetData();
+			FlxG.save.erase();
 			System.exit(0);
 		}
 

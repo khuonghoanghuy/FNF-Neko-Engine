@@ -125,7 +125,7 @@ class Note extends FlxSprite
 		{
 			noteScore * 0.2;
 			alpha = 0.6;
-			if (SaveData.saveData.get("downscroll"))
+			if (SaveData.downscroll)
 				angle = 180;
 			x += width / 2;
 

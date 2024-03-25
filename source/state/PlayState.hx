@@ -119,8 +119,6 @@ class PlayState extends MusicBeat
 	public var totalNotesHit:Float = 0;
 	public var totalPlayed:Int = 0;
 	public var scoreTxt:FlxText;
-	public var accuracyTxt:FlxText;
-	public var daPopUp:String = "?";
 
 	#if (haxe >= "4.0.0")
 	public var variables:Map<String, Dynamic> = new Map();
@@ -177,35 +175,12 @@ class PlayState extends MusicBeat
 		}
 	}
 
-	public static function runEvent(typeEvent:String, atbeat:Int, value1:Dynamic, value2:Dynamic):Void
-	{
-		if (init.curBeat == atbeat)
-		{
-			switch (typeEvent)
-			{
-				case "changeDadChar":
-					PlayState.init.remove(PlayState.init.dad);
-					PlayState.init.dad = new Character(100, 100, value1, false);
-					PlayState.init.add(PlayState.init.dad);
-				case "changeBfChar":
-					PlayState.init.remove(PlayState.init.boyfriend);
-					PlayState.init.boyfriend = new Boyfriend(740, 100, value1);
-					PlayState.init.add(PlayState.init.boyfriend);
-			}
-		}
-	}
-
-	public static function workOnCreate(code:String = null)
-	{
-		HscriptCode.execute(code);
-	}
-
 	override function create()
 	{
 		super.create();
 		init = this;
 		getInitForHscript();
-		SaveData.getSaveData();
+		// SaveData.getSaveData();
 		if (FlxG.sound.music != null)
 			FlxG.sound.music.stop();
 
@@ -226,6 +201,7 @@ class PlayState extends MusicBeat
 		if (SONG == null)
 			SONG = Song.loadFromJson('tutorial');
 
+		// dialogue system
 		if (FileSystem.exists(Paths.txt(SONG.song.toLowerCase() + '/' + SONG.song.toLowerCase() + 'Dialogue')))
 		{
 			dialogue = CoolUtil.coolTextFile(Paths.txt(SONG.song.toLowerCase() + '/' + SONG.song.toLowerCase() + 'Dialogue'));
@@ -234,247 +210,10 @@ class PlayState extends MusicBeat
 		Conductor.mapBPMChanges(SONG);
 		Conductor.changeBPM(SONG.bpm);
 
-		switch (SONG.song.toLowerCase())
-		{
-			case 'spookeez' | 'monster' | 'south':
-				new StageCode(CoolUtil.coolStringFile(Paths.file("stage/spooky.txt")));
-			default:
-				new StageCode(CoolUtil.coolStringFile(Paths.file("stage/stage.txt")));
-		}
-
-		/*switch (SONG.song.toLowerCase())
-			{
-				case 'spookeez' | 'monster' | 'south':
-					try
-					{
-						var path:String = Paths.file("stage/spooky.txt");
-						new HscriptCode(CoolUtil.coolStringFile(path));
-					}
-					catch (e:Dynamic)
-					{
-						trace("Error loading stage:\n" + e);
-						lime.app.Application.current.window.alert("Error loading stage:\n" + e, "Error Loading Stage!");
-					}
-				case 'pico' | 'blammed' | 'philly':
-					try
-					{
-						var path:String = Paths.file("stage/philly.txt");
-						new HscriptCode(CoolUtil.coolStringFile(path));
-					}
-					catch (e:Dynamic)
-					{
-						trace("Error loading stage:\n" + e);
-						lime.app.Application.current.window.alert("Error loading stage:\n" + e, "Error Loading Stage!");
-					}
-				case 'milf' | 'satin-panties' | 'high':
-					curStage = 'limo';
-					defaultCamZoom = 0.90;
-
-					var skyBG:FlxSprite = new FlxSprite(-120, -50).loadGraphic(Paths.image('stages/limo/limoSunset'));
-					skyBG.scrollFactor.set(0.1, 0.1);
-					add(skyBG);
-
-					var bgLimo:FlxSprite = new FlxSprite(-200, 480);
-					bgLimo.frames = Paths.getSparrowAtlas('stages/limo/bgLimo');
-					bgLimo.animation.addByPrefix('drive', "background limo pink", 24);
-					bgLimo.animation.play('drive');
-					bgLimo.scrollFactor.set(0.4, 0.4);
-					add(bgLimo);
-
-					grpLimoDancers = new FlxTypedGroup<BackgroundDancer>();
-					add(grpLimoDancers);
-
-					for (i in 0...5)
-					{
-						var dancer:BackgroundDancer = new BackgroundDancer((370 * i) + 130, bgLimo.y - 400);
-						dancer.scrollFactor.set(0.4, 0.4);
-						grpLimoDancers.add(dancer);
-					}
-
-					var limoTex = Paths.getSparrowAtlas('stages/limo/limoDrive');
-
-					limo = new FlxSprite(-120, 550);
-					limo.frames = limoTex;
-					limo.animation.addByPrefix('drive', "Limo stage", 24);
-					limo.animation.play('drive');
-					limo.antialiasing = true;
-
-					fastCar = new FlxSprite(-300, 160).loadGraphic(Paths.image('stages/limo/fastCarLol'));
-				case 'cocoa' | 'eggnog':
-					curStage = 'mall';
-
-					defaultCamZoom = 0.80;
-
-					var bg:FlxSprite = new FlxSprite(-1000, -500).loadGraphic(Paths.image('stages/christmas/bgWalls'));
-					bg.antialiasing = true;
-					bg.scrollFactor.set(0.2, 0.2);
-					bg.active = false;
-					bg.setGraphicSize(Std.int(bg.width * 0.8));
-					bg.updateHitbox();
-					add(bg);
-
-					upperBoppers = new FlxSprite(-240, -90);
-					upperBoppers.frames = Paths.getSparrowAtlas('stages/christmas/upperBop');
-					upperBoppers.animation.addByPrefix('bop', "Upper Crowd Bob", 24, false);
-					upperBoppers.antialiasing = true;
-					upperBoppers.scrollFactor.set(0.33, 0.33);
-					upperBoppers.setGraphicSize(Std.int(upperBoppers.width * 0.85));
-					upperBoppers.updateHitbox();
-					add(upperBoppers);
-
-					var bgEscalator:FlxSprite = new FlxSprite(-1100, -600).loadGraphic(Paths.image('stages/christmas/bgEscalator'));
-					bgEscalator.antialiasing = true;
-					bgEscalator.scrollFactor.set(0.3, 0.3);
-					bgEscalator.active = false;
-					bgEscalator.setGraphicSize(Std.int(bgEscalator.width * 0.9));
-					bgEscalator.updateHitbox();
-					add(bgEscalator);
-
-					var tree:FlxSprite = new FlxSprite(370, -250).loadGraphic(Paths.image('stages/christmas/christmasTree'));
-					tree.antialiasing = true;
-					tree.scrollFactor.set(0.40, 0.40);
-					add(tree);
-
-					bottomBoppers = new FlxSprite(-300, 140);
-					bottomBoppers.frames = Paths.getSparrowAtlas('stages/christmas/bottomBop');
-					bottomBoppers.animation.addByPrefix('bop', 'Bottom Level Boppers', 24, false);
-					bottomBoppers.antialiasing = true;
-					bottomBoppers.scrollFactor.set(0.9, 0.9);
-					bottomBoppers.setGraphicSize(Std.int(bottomBoppers.width * 1));
-					bottomBoppers.updateHitbox();
-					add(bottomBoppers);
-
-					var fgSnow:FlxSprite = new FlxSprite(-600, 700).loadGraphic(Paths.image('stages/christmas/fgSnow'));
-					fgSnow.active = false;
-					fgSnow.antialiasing = true;
-					add(fgSnow);
-
-					santa = new FlxSprite(-840, 150);
-					santa.frames = Paths.getSparrowAtlas('stages/christmas/santa');
-					santa.animation.addByPrefix('idle', 'santa idle in fear', 24, false);
-					santa.antialiasing = true;
-					add(santa);
-				case 'winter-horrorland':
-					curStage = 'mallEvil';
-					var bg:FlxSprite = new FlxSprite(-400, -500).loadGraphic(Paths.image('stages/christmas/evilBG'));
-					bg.antialiasing = true;
-					bg.scrollFactor.set(0.2, 0.2);
-					bg.active = false;
-					bg.setGraphicSize(Std.int(bg.width * 0.8));
-					bg.updateHitbox();
-					add(bg);
-
-					var evilTree:FlxSprite = new FlxSprite(300, -300).loadGraphic(Paths.image('stages/christmas/evilTree'));
-					evilTree.antialiasing = true;
-					evilTree.scrollFactor.set(0.2, 0.2);
-					add(evilTree);
-
-					var evilSnow:FlxSprite = new FlxSprite(-200, 700).loadGraphic(Paths.image("stages/christmas/evilSnow"));
-					evilSnow.antialiasing = true;
-					add(evilSnow);
-				case 'senpai' | 'roses':
-					curStage = 'school';
-
-					var bgSky = new FlxSprite().loadGraphic(Paths.image('stages/weeb/weebSky'));
-					bgSky.scrollFactor.set(0.1, 0.1);
-					add(bgSky);
-
-					var repositionShit = -200;
-
-					var bgSchool:FlxSprite = new FlxSprite(repositionShit, 0).loadGraphic(Paths.image('stages/weeb/weebSchool'));
-					bgSchool.scrollFactor.set(0.6, 0.90);
-					add(bgSchool);
-
-					var bgStreet:FlxSprite = new FlxSprite(repositionShit).loadGraphic(Paths.image('stages/weeb/weebStreet'));
-					bgStreet.scrollFactor.set(0.95, 0.95);
-					add(bgStreet);
-
-					var fgTrees:FlxSprite = new FlxSprite(repositionShit + 170, 130).loadGraphic(Paths.image('stages/weeb/weebTreesBack'));
-					fgTrees.scrollFactor.set(0.9, 0.9);
-					add(fgTrees);
-
-					var bgTrees:FlxSprite = new FlxSprite(repositionShit - 380, -800);
-					var treetex = Paths.getPackerAtlas('stages/weeb/weebTrees');
-					bgTrees.frames = treetex;
-					bgTrees.animation.add('treeLoop', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18], 12);
-					bgTrees.animation.play('treeLoop');
-					bgTrees.scrollFactor.set(0.85, 0.85);
-					add(bgTrees);
-
-					var treeLeaves:FlxSprite = new FlxSprite(repositionShit, -40);
-					treeLeaves.frames = Paths.getSparrowAtlas('stages/weeb/petals');
-					treeLeaves.animation.addByPrefix('leaves', 'PETALS ALL', 24, true);
-					treeLeaves.animation.play('leaves');
-					treeLeaves.scrollFactor.set(0.85, 0.85);
-					add(treeLeaves);
-
-					var widShit = Std.int(bgSky.width * 6);
-
-					bgSky.setGraphicSize(widShit);
-					bgSchool.setGraphicSize(widShit);
-					bgStreet.setGraphicSize(widShit);
-					bgTrees.setGraphicSize(Std.int(widShit * 1.4));
-					fgTrees.setGraphicSize(Std.int(widShit * 0.8));
-					treeLeaves.setGraphicSize(widShit);
-
-					fgTrees.updateHitbox();
-					bgSky.updateHitbox();
-					bgSchool.updateHitbox();
-					bgStreet.updateHitbox();
-					bgTrees.updateHitbox();
-					treeLeaves.updateHitbox();
-
-					bgGirls = new BackgroundGirls(-100, 190);
-					bgGirls.scrollFactor.set(0.9, 0.9);
-
-					if (SONG.song.toLowerCase() == 'roses')
-					{
-						bgGirls.getScared();
-					}
-
-					bgGirls.setGraphicSize(Std.int(bgGirls.width * daPixelZoom));
-					bgGirls.updateHitbox();
-					add(bgGirls);
-				case 'thorns':
-					try
-					{
-						var path:String = Paths.file("stage/schoolEvil.txt");
-						new HscriptCode(CoolUtil.coolStringFile(path));
-					}
-					catch (e:Dynamic)
-					{
-						trace("Error loading stage:\n" + e);
-						lime.app.Application.current.window.alert("Error loading stage:\n" + e, "Error Loading Stage!");
-					}
-				default:
-					try
-					{
-						var path:String = Paths.file("stage/stage.txt");
-						new HscriptCode(CoolUtil.coolStringFile(path));
-					}
-					catch (e:Dynamic)
-					{
-						trace("Error loading stage:\n" + e);
-						lime.app.Application.current.window.alert("Error loading stage:\n" + e, "Error Loading Stage!");
-					}
-		}*/
+		new StageCode(CoolUtil.coolStringFile(Paths.file("stage/" + SONG.stages + ".txt")));
 
 		var gfVersion:String = 'gf';
-
-		switch (curStage)
-		{
-			case 'limo':
-				gfVersion = 'gf-car';
-			case 'mall' | 'mallEvil':
-				gfVersion = 'gf-christmas';
-			case 'school':
-				gfVersion = 'gf-pixel';
-			case 'schoolEvil':
-				gfVersion = 'gf-pixel';
-		}
-
-		if (curStage == 'limo')
-			gfVersion = 'gf-car';
+		gfVersion = SONG.gfVersion;
 
 		gf = new Character(400, 130, gfVersion);
 		gf.scrollFactor.set(0.95, 0.95);
@@ -488,12 +227,6 @@ class PlayState extends MusicBeat
 			case 'gf':
 				dad.setPosition(gf.x, gf.y);
 				gf.visible = false;
-			/*if (isStoryMode)
-				{
-					camPos.x += 600;
-					// tweenCamIn();
-			}*/
-
 			case "spooky":
 				dad.y += 200;
 			case "monster":
@@ -563,7 +296,7 @@ class PlayState extends MusicBeat
 
 		strumLine = new FlxSprite(0, 50).makeGraphic(FlxG.width, 10);
 		strumLine.scrollFactor.set();
-		if (SaveData.saveData.get("downscroll"))
+		if (SaveData.downscroll)
 			strumLine.y = FlxG.height - 150;
 		strumLineNotes = new FlxTypedGroup<FlxSprite>();
 		add(strumLineNotes);
@@ -595,7 +328,7 @@ class PlayState extends MusicBeat
 		healthBarBG.screenCenter(X);
 		healthBarBG.scrollFactor.set();
 		add(healthBarBG);
-		if (SaveData.saveData.get("downscroll"))
+		if (SaveData.downscroll)
 			healthBarBG.y = FlxG.height * 0.1;
 		healthBar = new FlxBar(healthBarBG.x + 4, healthBarBG.y + 4, RIGHT_TO_LEFT, Std.int(healthBarBG.width - 8), Std.int(healthBarBG.height - 8), this,
 			'health', 0, 2);
@@ -614,16 +347,6 @@ class PlayState extends MusicBeat
 
 		scoreTxt = new FlxText(0, healthBarBG.y + 36, FlxG.width, "", 18);
 		scoreTxt.setFormat(Paths.font("vcr.ttf"), 18, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
-
-		if (SaveData.saveData.get("advanceDisplay"))
-		{
-			accuracyTxt = new FlxText(5, healthBarBG.y + 33, FlxG.width, "", 18);
-			accuracyTxt.scrollFactor.set();
-			accuracyTxt.x += scoreTxt.x + 100;
-			accuracyTxt.setFormat("VCR OSD Mono", 18, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
-			add(accuracyTxt);
-			accuracyTxt.cameras = [camHUD];
-		}
 
 		scoreTxt.scrollFactor.set();
 		add(scoreTxt);
@@ -1091,7 +814,7 @@ class PlayState extends MusicBeat
 			{
 				babyArrow.y -= 10;
 				babyArrow.alpha = 0;
-				FlxTween.tween(babyArrow, {y: babyArrow.y + 10, alpha: 1}, 1, {ease: FlxEase.cubeOut, startDelay: 0.5 + (0.2 * i)});
+				FlxTween.tween(babyArrow, {y: babyArrow.y + 10, alpha: 1}, 1, {ease: FlxEase.circOut, startDelay: 0.5 + (0.2 * i)});
 			}
 
 			babyArrow.ID = i;
@@ -1111,7 +834,9 @@ class PlayState extends MusicBeat
 
 	function tweenCamIn():Void
 	{
-		FlxTween.tween(FlxG.camera, {zoom: 1.3}, (Conductor.stepCrochet * 4 / 1000), {ease: FlxEase.linear});
+		FlxTween.tween(FlxG.camera, {zoom: 1.3}, (Conductor.stepCrochet * 4 / 1000), {
+			type: FlxTweenType.ONESHOT,
+		});
 	}
 
 	var fastCarCanDrive:Bool = true;
@@ -1238,46 +963,12 @@ class PlayState extends MusicBeat
 		icon.updateHitbox();
 	}
 
-	public static function workOnUpdate(atUpdate:Float = 0, code:String = null)
-	{
-		if (FlxG.elapsed == atUpdate)
-		{
-			try
-			{
-				eval(code);
-			}
-			catch (e:Error)
-			{
-				trace('ERROR ON UPDATE:\n\n$code\n\n' + e.message + '\n\n');
-			}
-		}
-	}
-
-	static function eval(code:String = null)
-	{
-		HscriptCode.execute(code);
-	}
-
-	public static function workOnCurrentUpdate(code:String = null)
-	{
-		// try to make FlxG.elasped can be using anytime
-		workOnUpdate(FlxG.sound.music.playing ? Conductor.songPosition : FlxG.sound.music.time, code);
-	}
-
 	override function update(elapsed:Float)
 	{
 		super.update(elapsed);
-		/*workOnUpdate();
-			workOnCurrentUpdate(); */
-		if (FlxG.save.data.camLerpPlayState)
+		if (SaveData.camLerpPlayState)
 		{
 			FlxG.camera.followLerp = CoolUtil.camLerpShit(0.10);
-		}
-
-		scoreTxt.text = "Score: " + songScore + " - Misses: " + songMisses;
-		if (SaveData.saveData.get("advanceDisplay"))
-		{
-			accuracyTxt.text = "Accuracy: " + truncateFloat(accuracy, 2) + "%" + "\nRating as: " + daPopUp;
 		}
 
 		if (startingSong)
@@ -1429,7 +1120,7 @@ class PlayState extends MusicBeat
 		{
 			notes.forEachAlive(function(daNote:Note)
 			{
-				var scrollDown = SaveData.saveData.get("downscroll");
+				var scrollDown = SaveData.downscroll;
 
 				if ((scrollDown && daNote.y < -daNote.height) || (!scrollDown && daNote.y > FlxG.height))
 				{
@@ -1518,7 +1209,7 @@ class PlayState extends MusicBeat
 					daNote.destroy();
 				}
 
-				if (SaveData.saveData.get("downscroll"))
+				if (SaveData.downscroll)
 					daNote.y = (strumLine.y - (Conductor.songPosition - daNote.strumTime) * (-0.45 * FlxMath.roundDecimal(SONG.speed, 2)));
 				else
 					daNote.y = (strumLine.y - (Conductor.songPosition - daNote.strumTime) * (0.45 * FlxMath.roundDecimal(SONG.speed, 2)));
@@ -1628,7 +1319,7 @@ class PlayState extends MusicBeat
 			{
 				for (shit in 0...pressArray.length)
 				{ // if a direction is hit that shouldn't be
-					if (pressArray[shit] && !directionList.contains(shit) && !SaveData.saveData.get("ghosttap"))
+					if (pressArray[shit] && !directionList.contains(shit) && !SaveData.ghosttap)
 						noteMiss(shit);
 				}
 				for (coolNote in possibleNotes)
@@ -1640,7 +1331,7 @@ class PlayState extends MusicBeat
 			else
 			{
 				for (shit in 0...pressArray.length)
-					if (pressArray[shit] && !SaveData.saveData.get("ghosttap"))
+					if (pressArray[shit] && !SaveData.ghosttap)
 						noteMiss(shit);
 			}
 		}
@@ -1693,27 +1384,18 @@ class PlayState extends MusicBeat
 		{
 			daRating = 'shit';
 			score = 50;
-			tryColor = FlxColor.GRAY;
 		}
 		else if (noteDiff > Conductor.safeZoneOffset * 0.75)
 		{
 			daRating = 'bad';
 			score = 100;
-			tryColor = FlxColor.BROWN;
 		}
 		else if (noteDiff > Conductor.safeZoneOffset * 0.2)
 		{
 			daRating = 'good';
 			score = 200;
-			tryColor = FlxColor.YELLOW;
-		}
-		if (daRating == "sick")
-		{
-			tryColor = FlxColor.GREEN;
 		}
 
-		daPopUp = daRating.toUpperCase();
-		accuracyTxt.color = tryColor;
 		songScore += score;
 
 		var pixelShitPart1:String = "gui/default/";
@@ -1907,7 +1589,7 @@ class PlayState extends MusicBeat
 	{
 		if (keyP)
 			goodNoteHit(note);
-		else if (!SaveData.saveData.get("ghosttap"))
+		else if (!SaveData.ghosttap)
 		{
 			badNoteCheck();
 		}
@@ -1959,8 +1641,14 @@ class PlayState extends MusicBeat
 			}
 			totalNotesHit += 1;
 			updateAccuracy();
-			trace(health);
+			updateScore();
+			// trace(health);
 		}
+	}
+
+	function updateScore():Void
+	{
+		scoreTxt.text = "Score: " + songScore + " - Misses: " + songMisses + " - Accuracy: " + truncateFloat(accuracy, 2) + "%";
 	}
 
 	function fastCarDrive()
