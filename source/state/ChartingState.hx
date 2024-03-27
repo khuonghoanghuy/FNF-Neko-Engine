@@ -82,6 +82,11 @@ class ChartingState extends MusicBeat
 	{
 		curSection = lastSection;
 
+		var bg:FlxSprite = new FlxSprite(0, 0, Paths.image("menuDesat"));
+		bg.color = 0xff515050;
+		bg.scrollFactor.set(0, 0);
+		add(bg);
+
 		gridBG = FlxGridOverlay.create(GRID_SIZE, GRID_SIZE, GRID_SIZE * 8, GRID_SIZE * 16);
 		add(gridBG);
 
@@ -573,7 +578,6 @@ class ChartingState extends MusicBeat
 			PlayState.SONG = _song;
 			FlxG.sound.music.stop();
 			vocals.stop();
-			// SaveData.getSaveData();
 			FlxG.switchState(new PlayState());
 		}
 

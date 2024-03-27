@@ -8,6 +8,8 @@ import object.Boyfriend;
 import object.Character;
 import state.PlayState;
 
+using StringTools;
+
 class HscriptCode
 {
 	var playState:PlayState = null;
@@ -20,6 +22,7 @@ class HscriptCode
 		var program = parser.parseString(script);
 		var interp = new hscript.Interp();
 
+		// classes
 		interp.variables.set("Math", Math);
 		interp.variables.set("FlxG", FlxG);
 		interp.variables.set("PlayState", PlayState.init);
@@ -28,25 +31,70 @@ class HscriptCode
 		interp.variables.set("FlxSprite", FlxSprite);
 		interp.variables.set('FlxCamera', FlxCamera);
 		interp.variables.set("Paths", Paths);
-		interp.variables.set('setVar', function(name:String, value:Dynamic)
-		{
-			PlayState.init.variables.set(name, value);
-		});
-		interp.variables.set('SetProperty', function(vari:String, value:String)
+
+		// global function
+		interp.variables.set('setProperty', function(vari:String, value:String)
 		{
 			return Reflect.setProperty(playState, vari, value.split('.'));
 		});
-		interp.variables.set("SetPostion", function(type:FlxObject, x:Float, y:Float)
+
+		// sprite function
+		interp.variables.set("makeSprite", function(tag:String, sprites:String, x:Float = 0, y:Float = 0)
 		{
-			return type.setPosition(x, y);
+			tag.replace('.', '');
+			var sprite:FlxSprite = new FlxSprite(x, y);
+			sprite.loadGraphic(Paths.image(sprites));
+			PlayState.init.variableImage.set(tag, sprite);
+			sprite.active = true;
 		});
-		interp.variables.set("add", function(object:flixel.FlxBasic)
+		interp.variables.set("setScaleSprite", function(tag:String, x:Float = 0, y:Float = 0)
 		{
-			PlayState.init.add(object);
+			if (PlayState.init.variableImage.exists(tag))
+			{
+				PlayState.init.variableImage.get(tag).scale.set(x, y);
+				return;
+			}
 		});
-		interp.variables.set("remove", function(object:flixel.FlxBasic)
+		interp.variables.set("setScrollFactorSprite", function(tag:String, x:Float = 0, y:Float = 0)
 		{
-			PlayState.init.remove(object);
+			if (PlayState.init.variableImage.exists(tag))
+			{
+				PlayState.init.variableImage.get(tag).scrollFactor.set(x, y);
+				return;
+			}
+		});
+		interp.variables.set("setPostionSprite", function(tag:String, x:Float = 0, y:Float = 0)
+		{
+			if (PlayState.init.variableImage.exists(tag))
+			{
+				PlayState.init.variableImage.get(tag).setPosition(x, y);
+				return;
+			}
+		});
+		interp.variables.set("updateHitboxSprite", function(tag:String)
+		{
+			if (PlayState.init.variableImage.exists(tag))
+			{
+				PlayState.init.variableImage.get(tag).updateHitbox();
+				return;
+			}
+		});
+		interp.variables.set("addSprite", function(tag:String)
+		{
+			if (PlayState.init.variableImage.exists(tag))
+			{
+				PlayState.init.add(PlayState.init.variableImage.get(tag));
+				return;
+			}
+		});
+		interp.variables.set("removeSprite", function(tag:String)
+		{
+			if (PlayState.init.variableImage.exists(tag))
+			{
+				PlayState.init.remove(PlayState.init.variableImage.get(tag));
+				PlayState.init.variableImage.remove(tag); // to remove them
+				return;
+			}
 		});
 
 		trace(interp.execute(program));

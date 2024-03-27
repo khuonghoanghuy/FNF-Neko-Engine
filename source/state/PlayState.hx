@@ -27,7 +27,6 @@ import flixel.util.FlxColor;
 import flixel.util.FlxSort;
 import flixel.util.FlxTimer;
 import hscript.HscriptCode;
-import hscript.StageCode;
 import lime.utils.Log;
 import object.BackgroundDancer;
 import object.BackgroundGirls;
@@ -120,11 +119,8 @@ class PlayState extends MusicBeat
 	public var totalPlayed:Int = 0;
 	public var scoreTxt:FlxText;
 
-	#if (haxe >= "4.0.0")
-	public var variables:Map<String, Dynamic> = new Map();
-	#else
-	public var variables:Map<String, Dynamic> = new Map<String, Dynamic>();
-	#end
+	// some global variable to store the sprite, text and other!
+	public var variableImage:Map<String, FlxSprite> = new Map<String, FlxSprite>();
 
 	public static var coolBgAnimatedPlayed:Array<String> = [""];
 
@@ -210,11 +206,25 @@ class PlayState extends MusicBeat
 		Conductor.mapBPMChanges(SONG);
 		Conductor.changeBPM(SONG.bpm);
 
-		new StageCode(CoolUtil.coolStringFile(Paths.file("stage/" + SONG.stages + ".txt")));
+		// load the stage by .txt file
+		new HscriptCode(CoolUtil.coolStringFile(Paths.file("stage/" + SONG.stages + ".txt")));
 
 		var gfVersion:String = 'gf';
 		gfVersion = SONG.gfVersion;
-
+		if (gfVersion == null) // i lazy to rechart
+		{
+			switch (curStage)
+			{
+				case 'limo':
+					gfVersion = 'gf-car';
+				case 'mall' | 'mallEvil':
+					gfVersion = 'gf-christmas';
+				case 'school':
+					gfVersion = 'gf-pixel';
+				case 'schoolEvil':
+					gfVersion = 'gf-pixel';
+			}
+		}
 		gf = new Character(400, 130, gfVersion);
 		gf.scrollFactor.set(0.95, 0.95);
 
@@ -347,7 +357,6 @@ class PlayState extends MusicBeat
 
 		scoreTxt = new FlxText(0, healthBarBG.y + 36, FlxG.width, "", 18);
 		scoreTxt.setFormat(Paths.font("vcr.ttf"), 18, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
-
 		scoreTxt.scrollFactor.set();
 		add(scoreTxt);
 
@@ -615,19 +624,6 @@ class PlayState extends MusicBeat
 			FlxG.sound.playMusic(Paths.inst(PlayState.SONG.song), 1, false);
 		FlxG.sound.music.onComplete = endSong;
 		vocals.play();
-
-		if (dad != null)
-		{
-			dad.dance();
-		}
-		if (gf != null)
-		{
-			gf.dance();
-		}
-		if (boyfriend != null)
-		{
-			boyfriend.playAnim('idle');
-		}
 	}
 
 	var debugNum:Int = 0;
